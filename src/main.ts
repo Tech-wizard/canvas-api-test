@@ -4,6 +4,7 @@ window.onload = () => {
 
     var canvas = document.getElementById("app") as HTMLCanvasElement;
     var context2D = canvas.getContext("2d");
+
     //var context3D = canvas.getContext("webgl");
 
     context2D.fillStyle = "#FF000000";
@@ -31,11 +32,9 @@ window.onload = () => {
 
     var img = new Bitmap("image.jpg");
 
-    img.scaleX = 0.99;
+    img.scaleX = 0.5;
     img.y = 10;
-    // image.onload = () => {
 
-    // }
 
     let tf1 = new TextField();
     tf1.text = "Hello";
@@ -44,22 +43,24 @@ window.onload = () => {
     let tf2 = new TextField();
     tf2.text = "World";
     tf2.x = 100;
+    tf2.y = 20;
 
+    
     stage.addChild(tf1);
     stage.addChild(tf2);
     stage.addChild(img);
 
-    stage.removechild(tf1);
+    //stage.removechild(tf1);
 
     let x = 0;
 
-    setInterval(() => {
+    //setInterval(() => {
 
-        context2D.clearRect(0, 0, canvas.width, canvas.height);
+    context2D.clearRect(0, 0, canvas.width, canvas.height);
 
-        stage.draw(context2D);
+    stage.draw(context2D);
 
-    }, 30);
+    // }, 30);
 
     console.log(canvas);
 
@@ -77,6 +78,13 @@ class DisplayObject implements Drawable {
 
     y: number = 0;
 
+    alpha: number = 1;
+
+    scaleX: number = 1;
+
+    scaleY: number = 1;
+
+
     // canvas = document.getElementById("app") as HTMLCanvasElement;
 
     // context2D = this.canvas.getContext("2d");
@@ -90,13 +98,7 @@ class Bitmap extends DisplayObject {
 
     image: HTMLImageElement;
 
-    scaleX: number = 1;
-
-    scaleY: number = 1;
-
     texture: string;
-
-    alpha: number = 1;
 
     width: number;
 
@@ -114,20 +116,33 @@ class Bitmap extends DisplayObject {
 
     draw(context2D: CanvasRenderingContext2D) {
 
-
-
         if (this.scaleX != 1 || this.scaleY != 1) {
-            //context2D.scale(this.scaleX, this.scaleY);
-            this.image.width = this.width*this.scaleX;
 
-            this.image.height = this.height*this.scaleY;
+            context2D.scale(this.scaleX, this.scaleY);
+
+            // this.image.width = this.width*this.scaleX;
+
+            // this.image.height = this.height*this.scaleY;
+
         }
+
 
         if (this.alpha != 1) {
+
             context2D.globalAlpha = this.alpha;
+
+        }
+        this.image.onload = () => {
+
+            context2D.drawImage(this.image, this.x, this.y);
+
+            context2D.scale(1, 1);
+
+            context2D.globalAlpha = 1;
+
         }
 
-        context2D.drawImage(this.image, this.x, this.y);
+
     }
 }
 
@@ -143,20 +158,25 @@ class TextField extends DisplayObject {
 
     draw(context2D: CanvasRenderingContext2D) {
 
+        if (this.scaleX != 1 || this.scaleY != 1) {
+
+            context2D.scale(this.scaleX, this.scaleY);
+
+        }
+
         context2D.font = this.size + "px " + this.font;
+
         context2D.fillText(this.text, this.x, this.y);
+
+        context2D.scale(1, 1);
+
+        context2D.globalAlpha = 1;
     }
 
 }
 
 
-class Shape extends DisplayObject {
 
-    draw(context2D: CanvasRenderingContext2D) {
-
-        context2D.fillRect(0, 0, 0, 0);
-    }
-}
 
 
 class DisplayObjectContainer implements Drawable {
@@ -193,4 +213,12 @@ class DisplayObjectContainer implements Drawable {
         this.array = [];
     }
 
+}
+
+class Shape extends DisplayObject {
+
+    draw(context2D: CanvasRenderingContext2D) {
+
+        context2D.fillRect(0, 0, 0, 0);
+    }
 }
