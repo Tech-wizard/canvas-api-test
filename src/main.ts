@@ -34,11 +34,13 @@ window.onload = () => {
 
     img.scaleX = 0.5;
     img.y = 10;
+    
 
 
     let tf1 = new TextField();
     tf1.text = "Hello";
     tf1.x = 0;
+    tf1.alpha = 0.5;
 
     let tf2 = new TextField();
     tf2.text = "World";
@@ -164,7 +166,14 @@ class TextField extends DisplayObject {
 
         }
 
+       
         context2D.font = this.size + "px " + this.font;
+
+        if (this.alpha != 1) {
+
+            context2D.globalAlpha = this.alpha;
+
+        }
 
         context2D.fillText(this.text, this.x, this.y);
 
