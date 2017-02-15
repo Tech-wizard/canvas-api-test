@@ -34,7 +34,7 @@ window.onload = () => {
 
     img.scaleX = 0.5;
     img.y = 10;
-    
+
 
 
     let tf1 = new TextField();
@@ -47,10 +47,10 @@ window.onload = () => {
     tf2.x = 100;
     tf2.y = 20;
 
-    
+    stage.addChild(img);
     stage.addChild(tf1);
     stage.addChild(tf2);
-    stage.addChild(img);
+
 
     //stage.removechild(tf1);
 
@@ -82,16 +82,31 @@ class DisplayObject implements Drawable {
 
     alpha: number = 1;
 
+    globalAppha: number = 1;
+
     scaleX: number = 1;
 
     scaleY: number = 1;
+
+    parent: DisplayObjectContainer;
 
 
     // canvas = document.getElementById("app") as HTMLCanvasElement;
 
     // context2D = this.canvas.getContext("2d");
 
-    draw(context2D: CanvasRenderingContext2D) {
+    draw(context2D: CanvasRenderingContext2D) {  //应有final
+        if (this.parent) {
+            this.globalAppha = this.parent.globalAppha * this.alpha;
+        }
+        else {
+          this.globalAppha = this.alpha;
+        }
+        context2D.globalAlpha = this.globalAppha;
+        this.render(context2D);
+    }
+
+    render(context2D: CanvasRenderingContext2D) {   //模板方法模式
 
     }
 }
@@ -116,7 +131,7 @@ class Bitmap extends DisplayObject {
 
     }
 
-    draw(context2D: CanvasRenderingContext2D) {
+    render(context2D: CanvasRenderingContext2D) {
 
         if (this.scaleX != 1 || this.scaleY != 1) {
 
@@ -129,12 +144,13 @@ class Bitmap extends DisplayObject {
         }
 
 
-        if (this.alpha != 1) {
+        // if (this.alpha != 1) {
 
-            context2D.globalAlpha = this.alpha;
+        //     context2D.globalAlpha = this.alpha;
 
-        }
-        this.image.onload = () => {
+        // }
+
+       // this.image.onload = () => {
 
             context2D.drawImage(this.image, this.x, this.y);
 
@@ -142,7 +158,7 @@ class Bitmap extends DisplayObject {
 
             context2D.globalAlpha = 1;
 
-        }
+        //}
 
 
     }
@@ -158,7 +174,7 @@ class TextField extends DisplayObject {
 
     size: string = "40";
 
-    draw(context2D: CanvasRenderingContext2D) {
+    render(context2D: CanvasRenderingContext2D) {
 
         if (this.scaleX != 1 || this.scaleY != 1) {
 
@@ -166,7 +182,7 @@ class TextField extends DisplayObject {
 
         }
 
-       
+
         context2D.font = this.size + "px " + this.font;
 
         if (this.alpha != 1) {
@@ -188,11 +204,11 @@ class TextField extends DisplayObject {
 
 
 
-class DisplayObjectContainer implements Drawable {
+class DisplayObjectContainer extends DisplayObject implements Drawable {
 
     array: Drawable[] = [];
 
-    draw(context2D) {
+    render(context2D) {
 
         for (let Drawable of this.array) {
 
@@ -200,13 +216,17 @@ class DisplayObjectContainer implements Drawable {
         }
     }
 
-    addChild(child: Drawable) {
+    addChild(child: DisplayObject) {
 
-        this.array.push(child);
+        if (this.array.indexOf(child) == -1) {
+
+            this.array.push(child);
+            child.parent = this;
+        }
 
     }
 
-    removechild(child: Drawable) {
+    removechild(child: DisplayObject) {
 
         var index = this.array.indexOf(child);
 
@@ -219,12 +239,20 @@ class DisplayObjectContainer implements Drawable {
     }
 
     removeall() {
+
         this.array = [];
+
     }
 
 }
 
+class Graphics {
+
+}
+
 class Shape extends DisplayObject {
+
+    graphics: Graphics;
 
     draw(context2D: CanvasRenderingContext2D) {
 
