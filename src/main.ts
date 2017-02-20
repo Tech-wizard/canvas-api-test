@@ -90,19 +90,24 @@ class DisplayObject implements Drawable {
 
     parent: DisplayObjectContainer;
 
+    
+
 
     // canvas = document.getElementById("app") as HTMLCanvasElement;
 
     // context2D = this.canvas.getContext("2d");
 
     draw(context2D: CanvasRenderingContext2D) {  //应有final
+
         if (this.parent) {
             this.globalAppha = this.parent.globalAppha * this.alpha;
         }
         else {
           this.globalAppha = this.alpha;
         }
+
         context2D.globalAlpha = this.globalAppha;
+
         this.render(context2D);
     }
 
@@ -156,7 +161,7 @@ class Bitmap extends DisplayObject {
 
             context2D.scale(1, 1);
 
-            context2D.globalAlpha = 1;
+           // context2D.globalAlpha = 1;
 
         //}
 
@@ -185,17 +190,17 @@ class TextField extends DisplayObject {
 
         context2D.font = this.size + "px " + this.font;
 
-        if (this.alpha != 1) {
+        // if (this.alpha != 1) {
 
-            context2D.globalAlpha = this.alpha;
+        //     context2D.globalAlpha = this.alpha;
 
-        }
+        // }
 
         context2D.fillText(this.text, this.x, this.y);
 
         context2D.scale(1, 1);
 
-        context2D.globalAlpha = 1;
+      //  context2D.globalAlpha = 1;
     }
 
 }

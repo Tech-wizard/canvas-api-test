@@ -34,9 +34,9 @@ window.onload = function () {
     tf2.text = "World";
     tf2.x = 100;
     tf2.y = 20;
+    stage.addChild(img);
     stage.addChild(tf1);
     stage.addChild(tf2);
-    stage.addChild(img);
     //stage.removechild(tf1);
     var x = 0;
     //setInterval(() => {
@@ -50,12 +50,23 @@ var DisplayObject = (function () {
         this.x = 0;
         this.y = 0;
         this.alpha = 1;
+        this.globalAppha = 1;
         this.scaleX = 1;
         this.scaleY = 1;
     }
     // canvas = document.getElementById("app") as HTMLCanvasElement;
     // context2D = this.canvas.getContext("2d");
     DisplayObject.prototype.draw = function (context2D) {
+        if (this.parent) {
+            this.globalAppha = this.parent.globalAppha * this.alpha;
+        }
+        else {
+            this.globalAppha = this.alpha;
+        }
+        context2D.globalAlpha = this.globalAppha;
+        this.render(context2D);
+    };
+    DisplayObject.prototype.render = function (context2D) {
     };
     return DisplayObject;
 }());
@@ -69,19 +80,18 @@ var Bitmap = (function (_super) {
         _this.height = _this.image.height;
         return _this;
     }
-    Bitmap.prototype.draw = function (context2D) {
-        var _this = this;
+    Bitmap.prototype.render = function (context2D) {
         if (this.scaleX != 1 || this.scaleY != 1) {
             context2D.scale(this.scaleX, this.scaleY);
         }
-        if (this.alpha != 1) {
-            context2D.globalAlpha = this.alpha;
-        }
-        this.image.onload = function () {
-            context2D.drawImage(_this.image, _this.x, _this.y);
-            context2D.scale(1, 1);
-            context2D.globalAlpha = 1;
-        };
+        // if (this.alpha != 1) {
+        //     context2D.globalAlpha = this.alpha;
+        // }
+        // this.image.onload = () => {
+        context2D.drawImage(this.image, this.x, this.y);
+        context2D.scale(1, 1);
+        // context2D.globalAlpha = 1;
+        //}
     };
     return Bitmap;
 }(DisplayObject));
@@ -94,32 +104,38 @@ var TextField = (function (_super) {
         _this.size = "40";
         return _this;
     }
-    TextField.prototype.draw = function (context2D) {
+    TextField.prototype.render = function (context2D) {
         if (this.scaleX != 1 || this.scaleY != 1) {
             context2D.scale(this.scaleX, this.scaleY);
         }
         context2D.font = this.size + "px " + this.font;
-        if (this.alpha != 1) {
-            context2D.globalAlpha = this.alpha;
-        }
+        // if (this.alpha != 1) {
+        //     context2D.globalAlpha = this.alpha;
+        // }
         context2D.fillText(this.text, this.x, this.y);
         context2D.scale(1, 1);
-        context2D.globalAlpha = 1;
+        //  context2D.globalAlpha = 1;
     };
     return TextField;
 }(DisplayObject));
-var DisplayObjectContainer = (function () {
+var DisplayObjectContainer = (function (_super) {
+    __extends(DisplayObjectContainer, _super);
     function DisplayObjectContainer() {
-        this.array = [];
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.array = [];
+        return _this;
     }
-    DisplayObjectContainer.prototype.draw = function (context2D) {
+    DisplayObjectContainer.prototype.render = function (context2D) {
         for (var _i = 0, _a = this.array; _i < _a.length; _i++) {
             var Drawable = _a[_i];
             Drawable.draw(context2D);
         }
     };
     DisplayObjectContainer.prototype.addChild = function (child) {
-        this.array.push(child);
+        if (this.array.indexOf(child) == -1) {
+            this.array.push(child);
+            child.parent = this;
+        }
     };
     DisplayObjectContainer.prototype.removechild = function (child) {
         var index = this.array.indexOf(child);
@@ -131,6 +147,11 @@ var DisplayObjectContainer = (function () {
         this.array = [];
     };
     return DisplayObjectContainer;
+}(DisplayObject));
+var Graphics = (function () {
+    function Graphics() {
+    }
+    return Graphics;
 }());
 var Shape = (function (_super) {
     __extends(Shape, _super);
