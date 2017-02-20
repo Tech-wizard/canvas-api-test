@@ -170,8 +170,6 @@ class Bitmap extends DisplayObject {
 
     //texture: string;
 
-    //child: DisplayObjectContainer;
-
     private _src = "";
 
     private isLoaded = false;

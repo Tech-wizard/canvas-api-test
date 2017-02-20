@@ -110,7 +110,6 @@ var Bitmap = (function (_super) {
     function Bitmap() {
         var _this = _super.call(this) || this;
         //texture: string;
-        //child: DisplayObjectContainer;
         _this._src = "";
         _this.isLoaded = false;
         _this.image = document.createElement('img');
