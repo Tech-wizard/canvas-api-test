@@ -4,7 +4,7 @@ window.onload = () => {
 
     var canvas = document.getElementById("app") as HTMLCanvasElement;
     var context2D = canvas.getContext("2d");
-
+    var DEG = Math.PI / 180;
     //var context3D = canvas.getContext("webgl");
 
     context2D.fillStyle = "#FF000000";
@@ -28,24 +28,43 @@ window.onload = () => {
     // var image = document.createElement('img');
     // image.src = "image.jpg";
 
+
+    //     var m1 = new math.Matrix(2,Math.cos(30 * DEG),Math.sin);
+
+    //    // a c tx     x   ax + cy + tx
+    //    // b d ty  *  y = bx + dy + ty 
+    //    // 0 0 1      1        1
+
+    //    `
+
+    //    2 0 100
+    //    0 1 0
+    //    0 0 1 
+    //    `
+
+    // //    var a = new COntainer();
+    // //    a.x = 100;
+    // //    a.scaleX = 2;·
+
+
     var stage = new DisplayObjectContainer();
 
     var img = new Bitmap();
     img.src = "image.JPG";
     img.scaleX = 0.5;
-    img.y = 10;
+    img.transY = 10;
     img.alpha = 0.1;
 
 
     let tf1 = new TextField();
     tf1.text = "Hello";
-    tf1.x = 0;
+    tf1.transX = 0;
     tf1.alpha = 0.5;
 
     let tf2 = new TextField();
     tf2.text = "World";
-    tf2.x = 100;
-    tf2.y = 20;
+    tf2.transX = 100;
+    tf2.transY = 20;
 
     stage.addChild(img);
     stage.addChild(tf1);
@@ -56,8 +75,8 @@ window.onload = () => {
     setInterval(() => {
 
         context2D.clearRect(0, 0, canvas.width, canvas.height);
-        tf1.y++;
-        img.x++;
+       // tf1.transY++;
+       // img.transX++;
         stage.draw(context2D);
 
     }, 100)
@@ -75,9 +94,9 @@ interface Drawable {
 
 class DisplayObject implements Drawable {
 
-    x: number = 0;
+    transX: number = 0;
 
-    y: number = 0;
+    transY: number = 0;
 
     alpha: number = 1;
 
@@ -87,13 +106,18 @@ class DisplayObject implements Drawable {
 
     scaleY: number = 1;
 
+    rotation:number = 0;
+
     parent: DisplayObjectContainer;
 
+    globalMatrix: math.Matrix;
 
+    relativeMatrix: math.Matrix;
 
     draw(context2D: CanvasRenderingContext2D) {  //应有final
-
+    
         if (this.parent) {
+
             this.globalAppha = this.parent.globalAppha * this.alpha;
         }
         else {
@@ -102,10 +126,30 @@ class DisplayObject implements Drawable {
 
         context2D.globalAlpha = this.globalAppha;
 
+        this.setMatrix();
+
+        context2D.setTransform(this.globalMatrix.a,this.globalMatrix.b,this.globalMatrix.c,this.globalMatrix.d,this.globalMatrix.tx,this.globalMatrix.ty);
+
         this.render(context2D);
     }
 
     render(context2D: CanvasRenderingContext2D) {   //模板方法模式
+
+    }
+
+    setMatrix() {
+        
+        this.relativeMatrix = new math.Matrix();
+
+        this.relativeMatrix.updateFromDisplayObject(this.transX, this.transY, this.scaleX, this.scaleY, this.rotation);
+
+        if (this.parent) {
+
+            this.globalMatrix = math.matrixAppendMatrix(this.relativeMatrix, this.parent.globalMatrix);
+
+        }else{
+            this.globalMatrix = new math.Matrix(1, 0, 0, 1, 0, 0);
+        }
 
     }
 }
@@ -139,16 +183,16 @@ class Bitmap extends DisplayObject {
         context2D.globalAlpha = this.alpha;
 
         if (this.isLoaded) {
-            context2D.drawImage(this.image, this.x, this.y);
+            context2D.drawImage(this.image, this.transX, this.transY);
         }
 
         else {
 
-          this.image.src = this._src;
+            this.image.src = this._src;
 
             this.image.onload = () => {
 
-                context2D.drawImage(this.image, this.x, this.y);
+                context2D.drawImage(this.image, this.transX, this.transY);
 
                 this.isLoaded = true;
 
@@ -184,7 +228,7 @@ class TextField extends DisplayObject {
 
         // }
 
-        context2D.fillText(this.text, this.x, this.y);
+        context2D.fillText(this.text, this.transX, this.transY);
 
         context2D.scale(1, 1);
 

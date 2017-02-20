@@ -6,6 +6,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 window.onload = function () {
     var canvas = document.getElementById("app");
     var context2D = canvas.getContext("2d");
+    var DEG = Math.PI / 180;
     //var context3D = canvas.getContext("webgl");
     context2D.fillStyle = "#FF000000";
     context2D.strokeStyle = "#00FF00";
@@ -22,40 +23,53 @@ window.onload = function () {
     //context2D.fillRect(0,0,100,100);  //设计不好的地方 做一件事情只有一种方法 一个api一个职责
     // var image = document.createElement('img');
     // image.src = "image.jpg";
+    //     var m1 = new math.Matrix(2,Math.cos(30 * DEG),Math.sin);
+    //    // a c tx     x   ax + cy + tx
+    //    // b d ty  *  y = bx + dy + ty 
+    //    // 0 0 1      1        1
+    //    `
+    //    2 0 100
+    //    0 1 0
+    //    0 0 1 
+    //    `
+    // //    var a = new COntainer();
+    // //    a.x = 100;
+    // //    a.scaleX = 2;·
     var stage = new DisplayObjectContainer();
     var img = new Bitmap();
     img.src = "image.JPG";
     img.scaleX = 0.5;
-    img.y = 10;
+    img.transY = 10;
     img.alpha = 0.1;
     var tf1 = new TextField();
     tf1.text = "Hello";
-    tf1.x = 0;
+    tf1.transX = 0;
     tf1.alpha = 0.5;
     var tf2 = new TextField();
     tf2.text = "World";
-    tf2.x = 100;
-    tf2.y = 20;
+    tf2.transX = 100;
+    tf2.transY = 20;
     stage.addChild(img);
     stage.addChild(tf1);
     stage.addChild(tf2);
     //stage.removechild(tf1);
     setInterval(function () {
         context2D.clearRect(0, 0, canvas.width, canvas.height);
-        tf1.y++;
-        img.x++;
+        // tf1.transY++;
+        // img.transX++;
         stage.draw(context2D);
     }, 100);
     console.log(canvas);
 };
 var DisplayObject = (function () {
     function DisplayObject() {
-        this.x = 0;
-        this.y = 0;
+        this.transX = 0;
+        this.transY = 0;
         this.alpha = 1;
         this.globalAppha = 1;
         this.scaleX = 1;
         this.scaleY = 1;
+        this.rotation = 0;
     }
     DisplayObject.prototype.draw = function (context2D) {
         if (this.parent) {
@@ -65,9 +79,21 @@ var DisplayObject = (function () {
             this.globalAppha = this.alpha;
         }
         context2D.globalAlpha = this.globalAppha;
+        this.setMatrix();
+        context2D.setTransform(this.globalMatrix.a, this.globalMatrix.b, this.globalMatrix.c, this.globalMatrix.d, this.globalMatrix.tx, this.globalMatrix.ty);
         this.render(context2D);
     };
     DisplayObject.prototype.render = function (context2D) {
+    };
+    DisplayObject.prototype.setMatrix = function () {
+        this.relativeMatrix = new math.Matrix();
+        this.relativeMatrix.updateFromDisplayObject(this.transX, this.transY, this.scaleX, this.scaleY, this.rotation);
+        if (this.parent) {
+            this.globalMatrix = math.matrixAppendMatrix(this.relativeMatrix, this.parent.globalMatrix);
+        }
+        else {
+            this.globalMatrix = new math.Matrix(1, 0, 0, 1, 0, 0);
+        }
     };
     return DisplayObject;
 }());
@@ -95,12 +121,12 @@ var Bitmap = (function (_super) {
         var _this = this;
         context2D.globalAlpha = this.alpha;
         if (this.isLoaded) {
-            context2D.drawImage(this.image, this.x, this.y);
+            context2D.drawImage(this.image, this.transX, this.transY);
         }
         else {
             this.image.src = this._src;
             this.image.onload = function () {
-                context2D.drawImage(_this.image, _this.x, _this.y);
+                context2D.drawImage(_this.image, _this.transX, _this.transY);
                 _this.isLoaded = true;
             };
         }
@@ -124,7 +150,7 @@ var TextField = (function (_super) {
         // if (this.alpha != 1) {
         //     context2D.globalAlpha = this.alpha;
         // }
-        context2D.fillText(this.text, this.x, this.y);
+        context2D.fillText(this.text, this.transX, this.transY);
         context2D.scale(1, 1);
         //  context2D.globalAlpha = 1;
     };
