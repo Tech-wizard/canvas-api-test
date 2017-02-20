@@ -23,9 +23,11 @@ window.onload = function () {
     // var image = document.createElement('img');
     // image.src = "image.jpg";
     var stage = new DisplayObjectContainer();
-    var img = new Bitmap("image.jpg");
+    var img = new Bitmap();
+    img.src = "image.JPG";
     img.scaleX = 0.5;
     img.y = 10;
+    img.alpha = 0.1;
     var tf1 = new TextField();
     tf1.text = "Hello";
     tf1.x = 0;
@@ -38,11 +40,12 @@ window.onload = function () {
     stage.addChild(tf1);
     stage.addChild(tf2);
     //stage.removechild(tf1);
-    var x = 0;
-    //setInterval(() => {
-    context2D.clearRect(0, 0, canvas.width, canvas.height);
-    stage.draw(context2D);
-    // }, 30);
+    setInterval(function () {
+        context2D.clearRect(0, 0, canvas.width, canvas.height);
+        tf1.y++;
+        img.x++;
+        stage.draw(context2D);
+    }, 100);
     console.log(canvas);
 };
 var DisplayObject = (function () {
@@ -54,8 +57,6 @@ var DisplayObject = (function () {
         this.scaleX = 1;
         this.scaleY = 1;
     }
-    // canvas = document.getElementById("app") as HTMLCanvasElement;
-    // context2D = this.canvas.getContext("2d");
     DisplayObject.prototype.draw = function (context2D) {
         if (this.parent) {
             this.globalAppha = this.parent.globalAppha * this.alpha;
@@ -72,26 +73,37 @@ var DisplayObject = (function () {
 }());
 var Bitmap = (function (_super) {
     __extends(Bitmap, _super);
-    function Bitmap(ad) {
+    function Bitmap() {
         var _this = _super.call(this) || this;
+        //texture: string;
+        _this._src = "";
+        _this.isLoaded = false;
         _this.image = document.createElement('img');
-        _this.image.src = ad;
-        _this.width = _this.image.width;
-        _this.height = _this.image.height;
         return _this;
+        // this.image.src = ad;
+        //this.isLoade = false;
     }
+    Object.defineProperty(Bitmap.prototype, "src", {
+        set: function (value) {
+            this._src = value;
+            this.isLoaded = false;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Bitmap.prototype.render = function (context2D) {
-        if (this.scaleX != 1 || this.scaleY != 1) {
-            context2D.scale(this.scaleX, this.scaleY);
+        var _this = this;
+        context2D.globalAlpha = this.alpha;
+        if (this.isLoaded) {
+            context2D.drawImage(this.image, this.x, this.y);
         }
-        // if (this.alpha != 1) {
-        //     context2D.globalAlpha = this.alpha;
-        // }
-        // this.image.onload = () => {
-        context2D.drawImage(this.image, this.x, this.y);
-        context2D.scale(1, 1);
-        // context2D.globalAlpha = 1;
-        //}
+        else {
+            this.image.src = this._src;
+            this.image.onload = function () {
+                context2D.drawImage(_this.image, _this.x, _this.y);
+                _this.isLoaded = true;
+            };
+        }
     };
     return Bitmap;
 }(DisplayObject));

@@ -30,11 +30,11 @@ window.onload = () => {
 
     var stage = new DisplayObjectContainer();
 
-    var img = new Bitmap("image.jpg");
-
+    var img = new Bitmap();
+    img.src = "image.JPG";
     img.scaleX = 0.5;
     img.y = 10;
-
+    img.alpha = 0.1;
 
 
     let tf1 = new TextField();
@@ -51,18 +51,17 @@ window.onload = () => {
     stage.addChild(tf1);
     stage.addChild(tf2);
 
-
     //stage.removechild(tf1);
 
-    let x = 0;
+    setInterval(() => {
 
-    //setInterval(() => {
+        context2D.clearRect(0, 0, canvas.width, canvas.height);
+        tf1.y++;
+        img.x++;
+        stage.draw(context2D);
 
-    context2D.clearRect(0, 0, canvas.width, canvas.height);
+    }, 100)
 
-    stage.draw(context2D);
-
-    // }, 30);
 
     console.log(canvas);
 
@@ -90,12 +89,7 @@ class DisplayObject implements Drawable {
 
     parent: DisplayObjectContainer;
 
-    
 
-
-    // canvas = document.getElementById("app") as HTMLCanvasElement;
-
-    // context2D = this.canvas.getContext("2d");
 
     draw(context2D: CanvasRenderingContext2D) {  //应有final
 
@@ -103,7 +97,7 @@ class DisplayObject implements Drawable {
             this.globalAppha = this.parent.globalAppha * this.alpha;
         }
         else {
-          this.globalAppha = this.alpha;
+            this.globalAppha = this.alpha;
         }
 
         context2D.globalAlpha = this.globalAppha;
@@ -120,51 +114,46 @@ class Bitmap extends DisplayObject {
 
     image: HTMLImageElement;
 
-    texture: string;
+    //texture: string;
 
-    width: number;
+    private _src = "";
 
-    height: number;
+    private isLoaded = false;
 
-    constructor(ad: string) {
+    constructor() {
 
         super();
         this.image = document.createElement('img');
-        this.image.src = ad;
-        this.width = this.image.width;
-        this.height = this.image.height;
+        // this.image.src = ad;
+        //this.isLoade = false;
 
+    }
+
+    set src(value: string) {
+        this._src = value;
+        this.isLoaded = false;
     }
 
     render(context2D: CanvasRenderingContext2D) {
 
-        if (this.scaleX != 1 || this.scaleY != 1) {
+        context2D.globalAlpha = this.alpha;
 
-            context2D.scale(this.scaleX, this.scaleY);
-
-            // this.image.width = this.width*this.scaleX;
-
-            // this.image.height = this.height*this.scaleY;
-
+        if (this.isLoaded) {
+            context2D.drawImage(this.image, this.x, this.y);
         }
 
+        else {
 
-        // if (this.alpha != 1) {
+          this.image.src = this._src;
 
-        //     context2D.globalAlpha = this.alpha;
+            this.image.onload = () => {
 
-        // }
+                context2D.drawImage(this.image, this.x, this.y);
 
-       // this.image.onload = () => {
+                this.isLoaded = true;
 
-            context2D.drawImage(this.image, this.x, this.y);
-
-            context2D.scale(1, 1);
-
-           // context2D.globalAlpha = 1;
-
-        //}
-
+            }
+        }
 
     }
 }
@@ -187,7 +176,6 @@ class TextField extends DisplayObject {
 
         }
 
-
         context2D.font = this.size + "px " + this.font;
 
         // if (this.alpha != 1) {
@@ -200,7 +188,7 @@ class TextField extends DisplayObject {
 
         context2D.scale(1, 1);
 
-      //  context2D.globalAlpha = 1;
+        //  context2D.globalAlpha = 1;
     }
 
 }
@@ -226,6 +214,7 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
         if (this.array.indexOf(child) == -1) {
 
             this.array.push(child);
+
             child.parent = this;
         }
 
