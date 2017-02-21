@@ -18,6 +18,28 @@
 // }
 var math;
 (function (math) {
+    var Rectangle = (function () {
+        function Rectangle() {
+            this.x = 0;
+            this.y = 0;
+            this.width = 1;
+            this.height = 1;
+        }
+        Rectangle.prototype.isPointInReactangle = function (point) {
+            var rect = this;
+            if (point.x < rect.width + rect.x &&
+                point.y < rect.height + rect.y &&
+                point.x > rect.x &&
+                point.y > rect.y) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
+        return Rectangle;
+    }());
+    math.Rectangle = Rectangle;
     var Point = (function () {
         function Point(x, y) {
             this.x = x;
