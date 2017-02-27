@@ -1,26 +1,26 @@
-// var galsses;
-// var wander;
-// galsses.addEventListener( "chlick"
-
-// );
-// wander.addEventListener( "chlick"
-// );
 
 //list 
 // |-itemRenderer
 //      |-- TextField
 //      |-- Button
 
-// window.onmouseup = () =>{
 
-// }
+interface RenderContext {     //跨平台
+
+    drawImage();
+
+    filltext();
+
+    setTransform();
+
+    globalAphla: number;
+}
 
 window.onload = () => {
 
     var canvas = document.getElementById("app") as HTMLCanvasElement;
     var context2D = canvas.getContext("2d");
     var DEG = Math.PI / 180;
-    //var context3D = canvas.getContext("webgl");
 
     // context2D.fillStyle = "#FF000000";
     // context2D.strokeStyle = "#00FF00";
@@ -40,10 +40,6 @@ window.onload = () => {
     //context2D.clearRect(0, 0, 400, 400);
     //context2D.fillRect(0,0,100,100);  //设计不好的地方 做一件事情只有一种方法 一个api一个职责
 
-    // var image = document.createElement('img');
-    // image.src = "image.jpg";
-
-
     //     var m1 = new math.Matrix(2,Math.cos(30 * DEG),Math.sin);
 
     //    // a c tx     x   ax + cy + tx
@@ -51,39 +47,45 @@ window.onload = () => {
     //    // 0 0 1      1        1
 
     //    `
-
     //    2 0 100
     //    0 1 0
     //    0 0 1 
     //    `
 
-    // //    var a = new COntainer();
     // //    a.x = 100;
     // //    a.scaleX = 2;·
 
-
     var stage = new DisplayObjectContainer();
+    var container = new DisplayObjectContainer();
 
-    var img = new Bitmap();
-    img.src = "image.JPG";
-    //img.scaleX = 0.5;
-    img.transY = 50;
-    img.alpha = 0.5;
-   // img.rotation = 45;
+    let tf = new TextField();
+    tf.text = "这是一句可以拖动的话";
+    tf.transX = 20;
+    tf.transY = 40;
+    tf.touchEnabled = true;
+    tf.addEventListener("mousedown", () => {
 
-    let tf1 = new TextField();
-    tf1.text = "Hello";
-    tf1.transX = 0;
-    tf1.alpha = 0.5;
+    });
+    tf.addEventListener("mousemove", () => {
 
-    let tf2 = new TextField();
-    tf2.text = "World";
-    tf2.transX = 100;
-    tf2.transY = 20;
+    });
+    tf.addEventListener("mouseup", () => {
 
-    stage.addChild(img);
-    stage.addChild(tf1);
-    stage.addChild(tf2);
+    });
+
+    let Button = new Bitmap();
+    Button.src = "image.JPG";
+    Button.transX = 50;
+    Button.transY = 50;
+    Button.scaleX = 0.2;
+    Button.scaleY = 0.2;
+    Button.touchEnabled = true;
+    Button.addEventListener("mousedown", () => { alert("mousedown") });
+    Button.addEventListener("mouseup", () => { alert("mouseup") });
+
+    stage.addChild(container);
+    container.addChild(Button);
+    container.addChild(tf);
 
     //context2D.setTransform(1, 0, 0, 1, 0, 0);
     //stage.removechild(tf1);
@@ -103,60 +105,124 @@ window.onload = () => {
         //tf1.transY++;
         //img.transX++;
         //stage.transX++;
+
         stage.draw(context2D);
         context2D.restore();
 
     }, 60)
 
-    window.onmousedown;
-
-    window.onmouseup;
-
-    window.onclick = (e)=>{
-        console.log(e);
+    window.onmouseup = (e) => {
+        // console.log("mouseup");
         let x = e.offsetX - 3;
         let y = e.offsetY - 3;
-         let result = stage.hitTest(x, y);
-         let target = result;
-         if (result) {
-            do {
-                //result.dispatchEvent(e);
-            }
+        //alert(x+","+y);
+        let result = stage.hitTest(x, y);
+        let target = result;
+        if (result) {
+
             while (result.parent) {
-                let type = "onmousedown";
-                let currentTarget =  result.parent;
-                let e = {type,target,currentTarget}
-                //result.parent.dispatchEvent(e);
+                let type = "mouseup";
+                let currentTarget = result.parent;
+                let e = { type, target, currentTarget }
+                result.parent.dispatchEvent(e);
+                console.log(e);
+                result = result.parent;
+            }
+        }
+
+    };
+
+    window.onmousedown = (e) => {
+        // console.log("mousedown");
+        let x = e.offsetX - 3;
+        let y = e.offsetY - 3;
+        //alert(x+","+y);
+        let result = stage.hitTest(x, y);
+        let target = result;
+        if (result) {
+
+            while (result.parent) {
+                let type = "mousedown";
+                let currentTarget = result.parent;
+                let e = { type, target, currentTarget }
+                result.parent.dispatchEvent(e);
+                console.log(e);
                 result = result.parent;
             }
         }
     }
 
-
-    setTimeout(function () {
-        let result = stage.hitTest(50, 50);
+    window.onmousemove = (e) => {
+        //console.log("mousemove");
+        let x = e.offsetX - 3;
+        let y = e.offsetY - 3;
+        //alert(x+","+y);
+        let result = stage.hitTest(x, y);
+        let target = result;
         if (result) {
-            do {
-                //result.dispatchEvent();
-            }
+
             while (result.parent) {
-                //result.dispatchEvent();
+                let type = "mousemove";
+                let currentTarget = result.parent;
+                let e = { type, target, currentTarget }
+                result.parent.dispatchEvent(e);
+                console.log(e);
                 result = result.parent;
             }
         }
+    };
 
-        console.log(result);
-    }, 1000);
+    //  window.onclick = (e)=>{
 
-    console.log(canvas);
+    //     let x = e.offsetX - 3;
+    //     let y = e.offsetY - 3;
+    //     //alert(x+","+y);
+    //      let result = stage.hitTest(x, y);
+    //      let target = result;
+    //      if (result) {
+
+    //         while (result.parent) {
+    //             let type = "onclick";
+    //             let currentTarget =  result.parent;
+    //             let e = {type,target,currentTarget}
+    //             result.parent.dispatchEvent(e);
+    //             console.log(e);
+    //             result = result.parent;
+    //         }
+    //     }
+    // };
+
+
+    // setTimeout(function () {
+    //     let result = list.hitTest(50, 50);
+    //     if (result) {
+    //         do {
+    //             //result.dispatchEvent(e);
+    //         }
+    //         while (result.parent) {
+    //             //result.dispatchEvent(e);
+    //             result = result.parent;
+    //         }
+    //     }
+
+    //     console.log(result);
+    // }, 1000);
+
 
 };
+
 
 interface Drawable {
 
     draw(context2D: CanvasRenderingContext2D);
 
 }
+
+interface Event {
+    addEventListener(type: string, listener: Function, useCapture?: boolean);
+    dispatchEvent(e: MouseEvent);
+}
+
 
 abstract class DisplayObject implements Drawable {
 
@@ -176,7 +242,7 @@ abstract class DisplayObject implements Drawable {
 
     parent: DisplayObjectContainer;
 
-    //children: DisplayObjectContainer[] = [];
+    children: DisplayObject[] = [];
 
     globalMatrix: math.Matrix;
 
@@ -187,8 +253,6 @@ abstract class DisplayObject implements Drawable {
     //捕获冒泡机制   通知整个父
 
 
-
-
     constructor() {
         this.globalMatrix = new math.Matrix();
         this.localMatrix = new math.Matrix();
@@ -197,6 +261,27 @@ abstract class DisplayObject implements Drawable {
     abstract hitTest(x: number, y: number);
 
     abstract render(context2D: CanvasRenderingContext2D);   //模板方法模式
+
+    addEventListener(type: string, listener: Function, useCapture?: boolean) {
+        if (useCapture == null) {
+            useCapture = false;
+        }
+        if (useCapture) {
+            TouchEventService.getInstance().getDispalyObjectListFromBUHUO(this);
+        }
+        else {
+            TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(this);
+        }
+
+        //TouchEventService.getInstance().displayObjectList
+        //listener.call(this);
+
+
+    }
+
+    dispatchEvent(e: MouseEvent) {
+        TouchEventService.getInstance().notify(e);
+    }
 
     draw(context2D: CanvasRenderingContext2D) {  //应有final
 
@@ -308,7 +393,11 @@ class TextField extends DisplayObject {
 
     font: string = "Arial";
 
-    size: string = "40";
+    size: string = "36";
+
+    constructor() {
+        super();
+    }
 
     render(context2D: CanvasRenderingContext2D) {
 
@@ -337,6 +426,10 @@ class TextField extends DisplayObject {
 class DisplayObjectContainer extends DisplayObject implements Drawable {
 
     children: DisplayObject[] = [];
+
+    constructor() {
+        super();
+    }
 
     render(context2D) {
         for (let Drawable of this.children) {
@@ -375,6 +468,18 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
             let point = new math.Point(x, y);
             let invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
             let pointBaseOnChild = math.pointAppendMatrix(point, child.localMatrix);
+            if (child.children) {
+                for (let j = child.children.length - 1; i >= 0; i--) {
+                    let HitTestResult = child.children[j].hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
+                    if (HitTestResult) {
+                        return HitTestResult;
+                    }
+                    else {
+                        return null;
+                    }
+                }
+            }
+
             let HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
             if (HitTestResult) {
                 return HitTestResult;
@@ -382,6 +487,8 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
             else {
                 return null;
             }
+
+
         }
     }
 

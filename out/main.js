@@ -1,25 +1,16 @@
-// var galsses;
-// var wander;
-// galsses.addEventListener( "chlick"
+//list 
+// |-itemRenderer
+//      |-- TextField
+//      |-- Button
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-// );
-// wander.addEventListener( "chlick"
-// );
-//list 
-// |-itemRenderer
-//      |-- TextField
-//      |-- Button
-// window.onmouseup = () =>{
-// }
 window.onload = function () {
     var canvas = document.getElementById("app");
     var context2D = canvas.getContext("2d");
     var DEG = Math.PI / 180;
-    //var context3D = canvas.getContext("webgl");
     // context2D.fillStyle = "#FF000000";
     // context2D.strokeStyle = "#00FF00";
     // context2D.globalAlpha = 1;
@@ -33,8 +24,6 @@ window.onload = function () {
     //context2D.measureText("Hellow").width;
     //context2D.clearRect(0, 0, 400, 400);
     //context2D.fillRect(0,0,100,100);  //设计不好的地方 做一件事情只有一种方法 一个api一个职责
-    // var image = document.createElement('img');
-    // image.src = "image.jpg";
     //     var m1 = new math.Matrix(2,Math.cos(30 * DEG),Math.sin);
     //    // a c tx     x   ax + cy + tx
     //    // b d ty  *  y = bx + dy + ty 
@@ -44,27 +33,33 @@ window.onload = function () {
     //    0 1 0
     //    0 0 1 
     //    `
-    // //    var a = new COntainer();
     // //    a.x = 100;
     // //    a.scaleX = 2;·
     var stage = new DisplayObjectContainer();
-    var img = new Bitmap();
-    img.src = "image.JPG";
-    //img.scaleX = 0.5;
-    img.transY = 50;
-    img.alpha = 0.5;
-    // img.rotation = 45;
-    var tf1 = new TextField();
-    tf1.text = "Hello";
-    tf1.transX = 0;
-    tf1.alpha = 0.5;
-    var tf2 = new TextField();
-    tf2.text = "World";
-    tf2.transX = 100;
-    tf2.transY = 20;
-    stage.addChild(img);
-    stage.addChild(tf1);
-    stage.addChild(tf2);
+    var container = new DisplayObjectContainer();
+    var tf = new TextField();
+    tf.text = "这是一句可以拖动的话";
+    tf.transX = 20;
+    tf.transY = 40;
+    tf.touchEnabled = true;
+    tf.addEventListener("mousedown", function () {
+    });
+    tf.addEventListener("mousemove", function () {
+    });
+    tf.addEventListener("mouseup", function () {
+    });
+    var Button = new Bitmap();
+    Button.src = "image.JPG";
+    Button.transX = 50;
+    Button.transY = 50;
+    Button.scaleX = 0.2;
+    Button.scaleY = 0.2;
+    Button.touchEnabled = true;
+    Button.addEventListener("mousedown", function () { alert("mousedown"); });
+    Button.addEventListener("mouseup", function () { alert("mouseup"); });
+    stage.addChild(container);
+    container.addChild(Button);
+    container.addChild(tf);
     //context2D.setTransform(1, 0, 0, 1, 0, 0);
     //stage.removechild(tf1);
     //context2D.save();
@@ -81,39 +76,90 @@ window.onload = function () {
         stage.draw(context2D);
         context2D.restore();
     }, 60);
-    window.onmousedown;
-    window.onmouseup;
-    window.onclick = function (e) {
-        console.log(e);
+    window.onmouseup = function (e) {
+        // console.log("mouseup");
         var x = e.offsetX - 3;
         var y = e.offsetY - 3;
+        //alert(x+","+y);
         var result = stage.hitTest(x, y);
         var target = result;
         if (result) {
-            do {
-            } while (result.parent);
-            {
-                var type = "onmousedown";
+            while (result.parent) {
+                var type = "mouseup";
                 var currentTarget = result.parent;
                 var e_1 = { type: type, target: target, currentTarget: currentTarget };
-                //result.parent.dispatchEvent(e);
+                result.parent.dispatchEvent(e_1);
+                console.log(e_1);
                 result = result.parent;
             }
         }
     };
-    setTimeout(function () {
-        var result = stage.hitTest(50, 50);
+    window.onmousedown = function (e) {
+        // console.log("mousedown");
+        var x = e.offsetX - 3;
+        var y = e.offsetY - 3;
+        //alert(x+","+y);
+        var result = stage.hitTest(x, y);
+        var target = result;
         if (result) {
-            do {
-            } while (result.parent);
-            {
-                //result.dispatchEvent();
+            while (result.parent) {
+                var type = "mousedown";
+                var currentTarget = result.parent;
+                var e_2 = { type: type, target: target, currentTarget: currentTarget };
+                result.parent.dispatchEvent(e_2);
+                console.log(e_2);
                 result = result.parent;
             }
         }
-        console.log(result);
-    }, 1000);
-    console.log(canvas);
+    };
+    window.onmousemove = function (e) {
+        //console.log("mousemove");
+        var x = e.offsetX - 3;
+        var y = e.offsetY - 3;
+        //alert(x+","+y);
+        var result = stage.hitTest(x, y);
+        var target = result;
+        if (result) {
+            while (result.parent) {
+                var type = "mousemove";
+                var currentTarget = result.parent;
+                var e_3 = { type: type, target: target, currentTarget: currentTarget };
+                result.parent.dispatchEvent(e_3);
+                console.log(e_3);
+                result = result.parent;
+            }
+        }
+    };
+    //  window.onclick = (e)=>{
+    //     let x = e.offsetX - 3;
+    //     let y = e.offsetY - 3;
+    //     //alert(x+","+y);
+    //      let result = stage.hitTest(x, y);
+    //      let target = result;
+    //      if (result) {
+    //         while (result.parent) {
+    //             let type = "onclick";
+    //             let currentTarget =  result.parent;
+    //             let e = {type,target,currentTarget}
+    //             result.parent.dispatchEvent(e);
+    //             console.log(e);
+    //             result = result.parent;
+    //         }
+    //     }
+    // };
+    // setTimeout(function () {
+    //     let result = list.hitTest(50, 50);
+    //     if (result) {
+    //         do {
+    //             //result.dispatchEvent(e);
+    //         }
+    //         while (result.parent) {
+    //             //result.dispatchEvent(e);
+    //             result = result.parent;
+    //         }
+    //     }
+    //     console.log(result);
+    // }, 1000);
 };
 var DisplayObject = (function () {
     //捕获冒泡机制   通知整个父
@@ -125,9 +171,26 @@ var DisplayObject = (function () {
         this.scaleX = 1;
         this.scaleY = 1;
         this.rotation = 0;
+        this.children = [];
         this.globalMatrix = new math.Matrix();
         this.localMatrix = new math.Matrix();
     }
+    DisplayObject.prototype.addEventListener = function (type, listener, useCapture) {
+        if (useCapture == null) {
+            useCapture = false;
+        }
+        if (useCapture) {
+            TouchEventService.getInstance().getDispalyObjectListFromBUHUO(this);
+        }
+        else {
+            TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(this);
+        }
+        //TouchEventService.getInstance().displayObjectList
+        //listener.call(this);
+    };
+    DisplayObject.prototype.dispatchEvent = function (e) {
+        TouchEventService.getInstance().notify(e);
+    };
     DisplayObject.prototype.draw = function (context2D) {
         context2D.save();
         if (this.parent) {
@@ -200,10 +263,10 @@ var Bitmap = (function (_super) {
 var TextField = (function (_super) {
     __extends(TextField, _super);
     function TextField() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super.call(this) || this;
         _this.text = "";
         _this.font = "Arial";
-        _this.size = "40";
+        _this.size = "36";
         return _this;
     }
     TextField.prototype.render = function (context2D) {
@@ -222,7 +285,7 @@ var TextField = (function (_super) {
 var DisplayObjectContainer = (function (_super) {
     __extends(DisplayObjectContainer, _super);
     function DisplayObjectContainer() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super.call(this) || this;
         _this.children = [];
         return _this;
     }
@@ -254,6 +317,17 @@ var DisplayObjectContainer = (function (_super) {
             var point = new math.Point(x, y);
             var invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
             var pointBaseOnChild = math.pointAppendMatrix(point, child.localMatrix);
+            if (child.children) {
+                for (var j = child.children.length - 1; i >= 0; i--) {
+                    var HitTestResult_1 = child.children[j].hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
+                    if (HitTestResult_1) {
+                        return HitTestResult_1;
+                    }
+                    else {
+                        return null;
+                    }
+                }
+            }
             var HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
             if (HitTestResult) {
                 return HitTestResult;
