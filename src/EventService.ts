@@ -1,6 +1,6 @@
 class TouchEventService {
 
-    private static instance;
+    private static instance:TouchEventService;
     private static count = 0;
 
     _touchStatus: boolean = false;
@@ -13,6 +13,7 @@ class TouchEventService {
     currentY:number;
     endX:number;
     endY:number;
+
     canMove=false;
 
     constructor() {
@@ -27,21 +28,6 @@ class TouchEventService {
         }
         return TouchEventService.instance;
     }
-
-    // public notify(e: MouseEvent) {
-       
-    //     for (var event of this.eventList) {
-      
-    //     }
-    // }
-
-    // public addEvent(event: MouseEvent) {
-    //     for (var i = 0; i < this.eventList.length; i++) {
-    //         if (event == this.eventList[i])
-    //             return ErrorCode.REPEAT_OBSERVER;
-    //     }
-    //     this.eventList.push(event);
-    // }
 
     public getDispalyObjectListFromMAOPAO(child:DisplayObject){
              if(child){

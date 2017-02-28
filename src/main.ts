@@ -66,13 +66,14 @@ window.onload = () => {
 
     tf.addEventListener("mousedown", () => {
         TouchEventService.getInstance().canMove = true;
+        console.log("tfdown");
     });
 
     tf.addEventListener("mousemove", (e: MouseEvent) => {
 
         if (TouchEventService.getInstance().canMove == true) {
-            let dx = TouchEventService.getInstance().currentX - TouchEventService.getInstance().lastX;
-            let dy = TouchEventService.getInstance().currentY - TouchEventService.getInstance().lastY;
+            let dx = TouchEventService.getInstance().currentX - TouchEventService.getInstance().endX;
+            let dy = TouchEventService.getInstance().currentY - TouchEventService.getInstance().endY;
             tf.transX += dx;
             tf.transY += dy;
         }
@@ -81,6 +82,7 @@ window.onload = () => {
 
     tf.addEventListener("mouseup", () => {
         TouchEventService.getInstance().canMove = false;
+         console.log("tfup");
     });
 
     let Button = new Bitmap();
@@ -93,7 +95,7 @@ window.onload = () => {
     Button.addEventListener("mousedown", () => { alert("mousedown") });
     Button.addEventListener("mouseup", () => { alert("mouseup") });
 
-    stage.addChild(container);
+   // stage.addChild(container);
     stage.addChild(Button);
     stage.addChild(tf);
     //container.addChild(Button);
@@ -285,26 +287,39 @@ abstract class DisplayObject implements Drawable {
     abstract render(context2D: CanvasRenderingContext2D);   //模板方法模式
 
     addEventListener(type: string, listener: Function, useCapture?: boolean) {
+
         if (useCapture == null) {
             useCapture = false;
         }
-        if (useCapture) {
-            TouchEventService.getInstance().getDispalyObjectListFromBUHUO(this);
-        }
-        else {
-            TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(this);
-        }
+       
         let touchlistener = new TouchListener(type, listener, useCapture);
         this.touchListenerList.push(touchlistener);
 
-        //TouchEventService.getInstance().displayObjectList
-        //listener.call(this);
 
 
     }
 
     dispatchEvent(e: MouseEvent) {
-        TouchEventService.getInstance().notify(e);
+
+        // if (useCapture==true) {
+        //     TouchEventService.getInstance().getDispalyObjectListFromBUHUO(this);
+        // }
+        // else {
+        //     TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(this);
+        // }
+
+        for (let i = 0; i < TouchEventService.getInstance().displayObjectList.length; i++) {
+
+            for (let j = 0; j < TouchEventService.getInstance().displayObjectList[i].touchListenerList.length; j++) {
+
+
+
+                if (TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].type = e.type){
+
+                    TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].func.call(this);
+                }
+            }
+        }
     }
 
     draw(context2D: CanvasRenderingContext2D) {  //应有final
