@@ -1,9 +1,9 @@
 var TouchEventService = (function () {
+    //listenerList: TouchListener[] = []; 
     function TouchEventService() {
         this._touchStatus = false;
         this.eventList = [];
         this.displayObjectList = [];
-        this.listenerList = [];
         TouchEventService.count++;
         if (TouchEventService.count > 1) {
             throw "singleton!!!";

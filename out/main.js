@@ -58,8 +58,10 @@ window.onload = function () {
     Button.addEventListener("mousedown", function () { alert("mousedown"); });
     Button.addEventListener("mouseup", function () { alert("mouseup"); });
     stage.addChild(container);
-    container.addChild(Button);
-    container.addChild(tf);
+    stage.addChild(Button);
+    stage.addChild(tf);
+    //container.addChild(Button);
+    //container.addChild(tf);
     //context2D.setTransform(1, 0, 0, 1, 0, 0);
     //stage.removechild(tf1);
     //context2D.save();
@@ -172,6 +174,7 @@ var DisplayObject = (function () {
         this.scaleY = 1;
         this.rotation = 0;
         this.children = [];
+        this.touchListenerList = [];
         this.globalMatrix = new math.Matrix();
         this.localMatrix = new math.Matrix();
     }
@@ -185,6 +188,8 @@ var DisplayObject = (function () {
         else {
             TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(this);
         }
+        var touchlistener = new TouchListener(type, listener, useCapture);
+        this.touchListenerList.push(touchlistener);
         //TouchEventService.getInstance().displayObjectList
         //listener.call(this);
     };
@@ -318,7 +323,7 @@ var DisplayObjectContainer = (function (_super) {
             var invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
             var pointBaseOnChild = math.pointAppendMatrix(point, child.localMatrix);
             if (child.children) {
-                for (var j = child.children.length - 1; i >= 0; i--) {
+                for (var j = child.children.length - 1; j >= 0; j--) {
                     var HitTestResult_1 = child.children[j].hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
                     if (HitTestResult_1) {
                         return HitTestResult_1;

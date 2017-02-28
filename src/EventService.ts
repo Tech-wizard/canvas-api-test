@@ -7,7 +7,13 @@ class TouchEventService {
 
      eventList: MouseEvent[] = [];
      displayObjectList: DisplayObject[] = [];
-     listenerList: TouchListener[] = []; 
+     //listenerList: TouchListener[] = []; 
+
+    currentX:number;
+    currentY:number;
+    endX:number;
+    endY:number;
+    canMove=false;
 
     constructor() {
         TouchEventService.count++;
@@ -22,12 +28,12 @@ class TouchEventService {
         return TouchEventService.instance;
     }
 
-    public notify(e: MouseEvent) {
+    // public notify(e: MouseEvent) {
        
-        for (var event of this.eventList) {
+    //     for (var event of this.eventList) {
       
-        }
-    }
+    //     }
+    // }
 
     // public addEvent(event: MouseEvent) {
     //     for (var i = 0; i < this.eventList.length; i++) {
@@ -36,6 +42,7 @@ class TouchEventService {
     //     }
     //     this.eventList.push(event);
     // }
+
     public getDispalyObjectListFromMAOPAO(child:DisplayObject){
              if(child){
                  this.displayObjectList.push(child);
@@ -74,11 +81,12 @@ enum ErrorCode {
 //          }
 
 class TouchListener {
-    type: number;
+
+    type: string;
     func: Function;
     capture = false;
 
-    constructor(type: number, func: Function, useCapture?: boolean) {
+    constructor(type: string, func: Function, useCapture?: boolean) {
         this.type = type;
         this.func = func;
         this.capture = useCapture || false;

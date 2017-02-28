@@ -63,14 +63,24 @@ window.onload = () => {
     tf.transX = 20;
     tf.transY = 40;
     tf.touchEnabled = true;
+
     tf.addEventListener("mousedown", () => {
+        TouchEventService.getInstance().canMove = true;
+    });
+
+    tf.addEventListener("mousemove", (e: MouseEvent) => {
+
+        if (TouchEventService.getInstance().canMove == true) {
+            let dx = TouchEventService.getInstance().currentX - TouchEventService.getInstance().lastX;
+            let dy = TouchEventService.getInstance().currentY - TouchEventService.getInstance().lastY;
+            tf.transX += dx;
+            tf.transY += dy;
+        }
 
     });
-    tf.addEventListener("mousemove", () => {
 
-    });
     tf.addEventListener("mouseup", () => {
-
+        TouchEventService.getInstance().canMove = false;
     });
 
     let Button = new Bitmap();
@@ -84,8 +94,10 @@ window.onload = () => {
     Button.addEventListener("mouseup", () => { alert("mouseup") });
 
     stage.addChild(container);
-    container.addChild(Button);
-    container.addChild(tf);
+    stage.addChild(Button);
+    stage.addChild(tf);
+    //container.addChild(Button);
+    //container.addChild(tf);
 
     //context2D.setTransform(1, 0, 0, 1, 0, 0);
     //stage.removechild(tf1);
@@ -113,8 +125,12 @@ window.onload = () => {
 
     window.onmouseup = (e) => {
         // console.log("mouseup");
+        TouchEventService.getInstance().endX = TouchEventService.getInstance().currentX;
+        TouchEventService.getInstance().endY = TouchEventService.getInstance().currentY;
         let x = e.offsetX - 3;
         let y = e.offsetY - 3;
+        TouchEventService.getInstance().currentX = x;
+        TouchEventService.getInstance().currentY = y;
         //alert(x+","+y);
         let result = stage.hitTest(x, y);
         let target = result;
@@ -134,8 +150,11 @@ window.onload = () => {
 
     window.onmousedown = (e) => {
         // console.log("mousedown");
+        TouchEventService.getInstance().canMove = true;
         let x = e.offsetX - 3;
         let y = e.offsetY - 3;
+        TouchEventService.getInstance().currentX = x;
+        TouchEventService.getInstance().currentY = y;
         //alert(x+","+y);
         let result = stage.hitTest(x, y);
         let target = result;
@@ -156,6 +175,8 @@ window.onload = () => {
         //console.log("mousemove");
         let x = e.offsetX - 3;
         let y = e.offsetY - 3;
+        TouchEventService.getInstance().currentX = x;
+        TouchEventService.getInstance().currentY = y;
         //alert(x+","+y);
         let result = stage.hitTest(x, y);
         let target = result;
@@ -250,6 +271,7 @@ abstract class DisplayObject implements Drawable {
 
     touchEnabled: boolean;
 
+    touchListenerList: TouchListener[] = [];
     //捕获冒泡机制   通知整个父
 
 
@@ -272,6 +294,8 @@ abstract class DisplayObject implements Drawable {
         else {
             TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(this);
         }
+        let touchlistener = new TouchListener(type, listener, useCapture);
+        this.touchListenerList.push(touchlistener);
 
         //TouchEventService.getInstance().displayObjectList
         //listener.call(this);
@@ -468,17 +492,18 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
             let point = new math.Point(x, y);
             let invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
             let pointBaseOnChild = math.pointAppendMatrix(point, child.localMatrix);
-            if (child.children) {
-                for (let j = child.children.length - 1; i >= 0; i--) {
-                    let HitTestResult = child.children[j].hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
-                    if (HitTestResult) {
-                        return HitTestResult;
-                    }
-                    else {
-                        return null;
-                    }
-                }
-            }
+
+            // if (child.children) {
+            //     for (let j = child.children.length - 1; j >= 0; j--) {
+            //         let HitTestResult = child.children[j].hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
+            //         if (HitTestResult) {
+            //             return HitTestResult;
+            //         }
+            //         else {
+            //             return null;
+            //         }
+            //     }
+            // }
 
             let HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
             if (HitTestResult) {
