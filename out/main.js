@@ -11,19 +11,6 @@ window.onload = function () {
     var canvas = document.getElementById("app");
     var context2D = canvas.getContext("2d");
     var DEG = Math.PI / 180;
-    // context2D.fillStyle = "#FF000000";
-    // context2D.strokeStyle = "#00FF00";
-    // context2D.globalAlpha = 1;
-    // context2D.setTransform(1, 0, 0, 1, 50, 50);
-    //1 0 50
-    //0 1 50
-    //0 0 1
-    // context2D.fill();
-    // context2D.stroke();
-    //context2D.fillText("Hellow", 0, 10);
-    //context2D.measureText("Hellow").width;
-    //context2D.clearRect(0, 0, 400, 400);
-    //context2D.fillRect(0,0,100,100);  //设计不好的地方 做一件事情只有一种方法 一个api一个职责
     //     var m1 = new math.Matrix(2,Math.cos(30 * DEG),Math.sin);
     //    // a c tx     x   ax + cy + tx
     //    // b d ty  *  y = bx + dy + ty 
@@ -34,56 +21,104 @@ window.onload = function () {
     //    0 0 1 
     //    `
     // //    a.x = 100;
-    // //    a.scaleX = 2;·
+    // //    a.scaleX = 2;
+    // let lastNow = Date.now();
+    // let frameHandler = () => {
+    //     console.log("111");
+    //     let now = Date.now();
+    //     let deltaTime = lastNow - now;
+    //     Ticker.getInstance().notify(deltaTime);
+    //     context2D.save();
+    //     context2D.setTransform(1, 0, 0, 1, 0, 0);
+    //     context2D.clearRect(0, 0, canvas.width, canvas.height);
+    //     //stage.updateMatrix();//3d引擎需要分开
+    //     stage.draw(context2D);
+    //     context2D.restore();
+    //     lastNow = now;
+    //     window.requestAnimationFrame(frameHandler);
+    // }
+    // window.requestAnimationFrame(frameHandler);
+    // let speed = 10;
+    // Ticker.getInstance().register((deltaTime) => {
+    // Button.transX = speed * deltaTime;
+    // // h = 1/2 * g * t * t;//Tween
+    // // s+=1;   //新手
+    // // v = g * deltaTime;
+    // // s= s0 + v *deltaTime; //入门
+    // // for(let i = 0;i<deltaTime/10;i++){  //切片
+    // //     doit(10);
+    // // }
+    // // function doit(deltaTime){
+    // //    v = g * deltaTime;
+    // // s= s0 + v *deltaTime;   
+    // // }
+    // });
     var stage = new DisplayObjectContainer();
     var container = new DisplayObjectContainer();
+    stage.addEventListener("mousedown", function () {
+        console.log("stage");
+    });
+    container.addEventListener("mousedown", function () {
+        console.log("container");
+    }, true);
     var tf = new TextField();
-    tf.text = "这是一句可以拖动的话";
+    tf.text = "可以拖动的话";
     tf.transX = 20;
     tf.transY = 40;
     tf.touchEnabled = true;
     tf.addEventListener("mousedown", function () {
+        TouchEventService.getInstance().canMove = true;
+        console.log("tfdown");
     });
     tf.addEventListener("mousemove", function () {
+        if (TouchEventService.getInstance().canMove == true) {
+            var dx = TouchEventService.getInstance().currentX - TouchEventService.getInstance().endX;
+            var dy = TouchEventService.getInstance().currentY - TouchEventService.getInstance().endY;
+            tf.transX += dx;
+            tf.transY += dy;
+        }
     });
     tf.addEventListener("mouseup", function () {
+        TouchEventService.getInstance().canMove = false;
+        console.log("tfup");
     });
     var Button = new Bitmap();
     Button.src = "image.JPG";
     Button.transX = 50;
     Button.transY = 50;
-    Button.scaleX = 0.2;
-    Button.scaleY = 0.2;
+    Button.scaleX = 0.3;
+    Button.scaleY = 0.3;
     Button.touchEnabled = true;
     Button.addEventListener("mousedown", function () { alert("mousedown"); });
     Button.addEventListener("mouseup", function () { alert("mouseup"); });
+    // stage.addChild(Button);
+    // stage.addChild(tf);
     stage.addChild(container);
-    stage.addChild(Button);
-    stage.addChild(tf);
-    //container.addChild(Button);
-    //container.addChild(tf);
-    //context2D.setTransform(1, 0, 0, 1, 0, 0);
-    //stage.removechild(tf1);
-    //context2D.save();
+    container.addChild(Button);
+    container.addChild(tf);
     setInterval(function () {
         context2D.save();
         context2D.setTransform(1, 0, 0, 1, 0, 0);
         context2D.clearRect(0, 0, canvas.width, canvas.height);
         //context2D.translate(tf1.transX,tf1.transY++);
         //context2D.translate(img.transX++,img.transY);
-        //img.rotation++;
+        //Button.rotation++;
         //tf1.transY++;
-        //img.transX++;
+        //Button.transX++;
         //stage.transX++;
         stage.draw(context2D);
         context2D.restore();
     }, 60);
     window.onmouseup = function (e) {
-        // console.log("mouseup");
+        TouchEventService.getInstance().endX = TouchEventService.getInstance().currentX;
+        TouchEventService.getInstance().endY = TouchEventService.getInstance().currentY;
         var x = e.offsetX - 3;
         var y = e.offsetY - 3;
+        TouchEventService.getInstance().currentX = x;
+        TouchEventService.getInstance().currentY = y;
         //alert(x+","+y);
         var result = stage.hitTest(x, y);
+        console.log(result);
         var target = result;
         if (result) {
             while (result.parent) {
@@ -97,11 +132,14 @@ window.onload = function () {
         }
     };
     window.onmousedown = function (e) {
-        // console.log("mousedown");
+        TouchEventService.getInstance().canMove = true;
         var x = e.offsetX - 3;
         var y = e.offsetY - 3;
+        TouchEventService.getInstance().currentX = x;
+        TouchEventService.getInstance().currentY = y;
         //alert(x+","+y);
         var result = stage.hitTest(x, y);
+        console.log(result);
         var target = result;
         if (result) {
             while (result.parent) {
@@ -115,11 +153,13 @@ window.onload = function () {
         }
     };
     window.onmousemove = function (e) {
-        //console.log("mousemove");
         var x = e.offsetX - 3;
         var y = e.offsetY - 3;
+        TouchEventService.getInstance().currentX = x;
+        TouchEventService.getInstance().currentY = y;
         //alert(x+","+y);
         var result = stage.hitTest(x, y);
+        console.log(result);
         var target = result;
         if (result) {
             while (result.parent) {
@@ -182,19 +222,23 @@ var DisplayObject = (function () {
         if (useCapture == null) {
             useCapture = false;
         }
-        if (useCapture) {
-            TouchEventService.getInstance().getDispalyObjectListFromBUHUO(this);
-        }
-        else {
-            TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(this);
-        }
         var touchlistener = new TouchListener(type, listener, useCapture);
         this.touchListenerList.push(touchlistener);
-        //TouchEventService.getInstance().displayObjectList
-        //listener.call(this);
     };
     DisplayObject.prototype.dispatchEvent = function (e) {
-        TouchEventService.getInstance().notify(e);
+        // if (useCapture==true) {
+        //     TouchEventService.getInstance().getDispalyObjectListFromBUHUO(this);
+        // }
+        // else {
+        //     TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(this);
+        // }
+        for (var i = 0; i < TouchEventService.getInstance().displayObjectList.length; i++) {
+            for (var j = 0; j < TouchEventService.getInstance().displayObjectList[i].touchListenerList.length; j++) {
+                if (TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].type == e.type) {
+                    TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].func();
+                }
+            }
+        }
     };
     DisplayObject.prototype.draw = function (context2D) {
         context2D.save();
@@ -272,18 +316,28 @@ var TextField = (function (_super) {
         _this.text = "";
         _this.font = "Arial";
         _this.size = "36";
+        _this._measureTextWidth = 0;
         return _this;
     }
     TextField.prototype.render = function (context2D) {
         context2D.font = this.size + "px " + this.font;
         context2D.fillText(this.text, 0, 0);
+        context2D.measureText(this.text).width;
     };
     TextField.prototype.hitTest = function (x, y) {
+        console.log("tfht");
         var rect = new math.Rectangle();
         rect.height = 20;
-        rect.width = 10 * this.text.length;
+        rect.width = this._measureTextWidth;
         var point = new math.Point(x, y);
-        return rect.isPointInReactangle(point) ? this : null;
+        //return rect.isPointInReactangle(point) ? this : null;
+        console.log(rect.isPointInReactangle(point));
+        if (rect.isPointInReactangle(point)) {
+            return this;
+        }
+        else {
+            return null;
+        }
     };
     return TextField;
 }(DisplayObject));
@@ -322,18 +376,20 @@ var DisplayObjectContainer = (function (_super) {
             var point = new math.Point(x, y);
             var invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
             var pointBaseOnChild = math.pointAppendMatrix(point, child.localMatrix);
-            if (child.children) {
-                for (var j = child.children.length - 1; j >= 0; j--) {
-                    var HitTestResult_1 = child.children[j].hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
-                    if (HitTestResult_1) {
-                        return HitTestResult_1;
-                    }
-                    else {
-                        return null;
-                    }
-                }
-            }
+            // if (child.children) {
+            //     for (let j = child.children.length - 1; j >= 0; j--) {
+            //         let HitTestResult = child.children[j].hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
+            //         if (HitTestResult) {
+            //             return HitTestResult;
+            //         }
+            //         else {
+            //             return null;
+            //         }
+            //     }
+            // }
+            console.log(child);
             var HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
+            console.log(HitTestResult);
             if (HitTestResult) {
                 return HitTestResult;
             }

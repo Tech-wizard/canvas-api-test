@@ -29,8 +29,8 @@ var math;
             var rect = this;
             if (point.x < rect.width + rect.x &&
                 point.y < rect.height + rect.y &&
-                point.x > rect.x &&
-                point.y > rect.y) {
+                point.x >= rect.x &&
+                point.y >= rect.y) {
                 return true;
             }
             else {
