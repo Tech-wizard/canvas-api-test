@@ -22,23 +22,7 @@ window.onload = () => {
     var context2D = canvas.getContext("2d");
     var DEG = Math.PI / 180;
 
-    // context2D.fillStyle = "#FF000000";
-    // context2D.strokeStyle = "#00FF00";
-
-    // context2D.globalAlpha = 1;
-    // context2D.setTransform(1, 0, 0, 1, 50, 50);
-
-    //1 0 50
-    //0 1 50
-    //0 0 1
-
-    // context2D.fill();
-    // context2D.stroke();
-
-    //context2D.fillText("Hellow", 0, 10);
-    //context2D.measureText("Hellow").width;
-    //context2D.clearRect(0, 0, 400, 400);
-    //context2D.fillRect(0,0,100,100);  //设计不好的地方 做一件事情只有一种方法 一个api一个职责
+   
 
     //     var m1 = new math.Matrix(2,Math.cos(30 * DEG),Math.sin);
 
@@ -53,13 +37,65 @@ window.onload = () => {
     //    `
 
     // //    a.x = 100;
-    // //    a.scaleX = 2;·
+    // //    a.scaleX = 2;
+   
+    // let lastNow = Date.now();
+
+    // let frameHandler = () => {
+    //     console.log("111");
+
+    //     let now = Date.now();
+    //     let deltaTime = lastNow - now;
+    //     Ticker.getInstance().notify(deltaTime);
+    //     context2D.save();
+    //     context2D.setTransform(1, 0, 0, 1, 0, 0);
+    //     context2D.clearRect(0, 0, canvas.width, canvas.height);
+    //     //stage.updateMatrix();//3d引擎需要分开
+    //     stage.draw(context2D);
+    //     context2D.restore();
+    //     lastNow = now;
+    //     window.requestAnimationFrame(frameHandler);
+
+    // }
+    // window.requestAnimationFrame(frameHandler);
+
+    // let speed = 10;
+
+    // Ticker.getInstance().register((deltaTime) => {
+
+    // Button.transX = speed * deltaTime;
+
+    // // h = 1/2 * g * t * t;//Tween
+
+    // // s+=1;   //新手
+
+    // // v = g * deltaTime;
+    // // s= s0 + v *deltaTime; //入门
+
+    // // for(let i = 0;i<deltaTime/10;i++){  //切片
+    // //     doit(10);
+    // // }
+
+    // // function doit(deltaTime){
+    // //    v = g * deltaTime;
+    // // s= s0 + v *deltaTime;   
+    // // }
+
+    // });
 
     var stage = new DisplayObjectContainer();
     var container = new DisplayObjectContainer();
 
+    stage.addEventListener("mousedown",()=>{
+        console.log("stage");
+    });
+
+    container.addEventListener("mousedown",()=>{
+        console.log("container");
+    },true);
+
     let tf = new TextField();
-    tf.text = "这是一句可以拖动的话";
+    tf.text = "可以拖动的话";
     tf.transX = 20;
     tf.transY = 40;
     tf.touchEnabled = true;
@@ -82,28 +118,27 @@ window.onload = () => {
 
     tf.addEventListener("mouseup", () => {
         TouchEventService.getInstance().canMove = false;
-         console.log("tfup");
+        console.log("tfup");
     });
 
     let Button = new Bitmap();
     Button.src = "image.JPG";
     Button.transX = 50;
     Button.transY = 50;
-    Button.scaleX = 0.2;
-    Button.scaleY = 0.2;
+    Button.scaleX = 0.3;
+    Button.scaleY = 0.3;
     Button.touchEnabled = true;
     Button.addEventListener("mousedown", () => { alert("mousedown") });
     Button.addEventListener("mouseup", () => { alert("mouseup") });
 
-   // stage.addChild(container);
-    stage.addChild(Button);
-    stage.addChild(tf);
-    //container.addChild(Button);
-    //container.addChild(tf);
 
-    //context2D.setTransform(1, 0, 0, 1, 0, 0);
-    //stage.removechild(tf1);
-    //context2D.save();
+    // stage.addChild(Button);
+    // stage.addChild(tf);
+    stage.addChild(container);
+
+    container.addChild(Button);
+    container.addChild(tf);
+
 
     setInterval(() => {
 
@@ -117,7 +152,7 @@ window.onload = () => {
         //context2D.translate(img.transX++,img.transY);
         //img.rotation++;
         //tf1.transY++;
-        //img.transX++;
+         Button.transX++;
         //stage.transX++;
 
         stage.draw(context2D);
@@ -126,7 +161,7 @@ window.onload = () => {
     }, 60)
 
     window.onmouseup = (e) => {
-        // console.log("mouseup");
+         console.log("mouseup");
         TouchEventService.getInstance().endX = TouchEventService.getInstance().currentX;
         TouchEventService.getInstance().endY = TouchEventService.getInstance().currentY;
         let x = e.offsetX - 3;
@@ -151,7 +186,7 @@ window.onload = () => {
     };
 
     window.onmousedown = (e) => {
-        // console.log("mousedown");
+         console.log("mousedown");
         TouchEventService.getInstance().canMove = true;
         let x = e.offsetX - 3;
         let y = e.offsetY - 3;
@@ -159,6 +194,7 @@ window.onload = () => {
         TouchEventService.getInstance().currentY = y;
         //alert(x+","+y);
         let result = stage.hitTest(x, y);
+        console.log(result);
         let target = result;
         if (result) {
 
@@ -174,12 +210,14 @@ window.onload = () => {
     }
 
     window.onmousemove = (e) => {
-        //console.log("mousemove");
+
+        console.log("mousemove");
         let x = e.offsetX - 3;
         let y = e.offsetY - 3;
         TouchEventService.getInstance().currentX = x;
         TouchEventService.getInstance().currentY = y;
         //alert(x+","+y);
+        
         let result = stage.hitTest(x, y);
         let target = result;
         if (result) {
@@ -274,8 +312,8 @@ abstract class DisplayObject implements Drawable {
     touchEnabled: boolean;
 
     touchListenerList: TouchListener[] = [];
-    //捕获冒泡机制   通知整个父
 
+    //捕获冒泡机制   通知整个父
 
     constructor() {
         this.globalMatrix = new math.Matrix();
@@ -291,11 +329,9 @@ abstract class DisplayObject implements Drawable {
         if (useCapture == null) {
             useCapture = false;
         }
-       
+
         let touchlistener = new TouchListener(type, listener, useCapture);
         this.touchListenerList.push(touchlistener);
-
-
 
     }
 
@@ -307,16 +343,16 @@ abstract class DisplayObject implements Drawable {
         // else {
         //     TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(this);
         // }
+       
+       
 
         for (let i = 0; i < TouchEventService.getInstance().displayObjectList.length; i++) {
 
             for (let j = 0; j < TouchEventService.getInstance().displayObjectList[i].touchListenerList.length; j++) {
 
+                if (TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].type == e.type) {
 
-
-                if (TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].type = e.type){
-
-                    TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].func.call(this);
+                    TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].func();
                 }
             }
         }
@@ -434,6 +470,8 @@ class TextField extends DisplayObject {
 
     size: string = "36";
 
+     _measureTextWidth = 0;
+
     constructor() {
         super();
     }
@@ -444,13 +482,15 @@ class TextField extends DisplayObject {
 
         context2D.fillText(this.text, 0, 0);
 
+        context2D.measureText(this.text).width;
+
     }
 
     hitTest(x: number, y: number) {
 
         var rect = new math.Rectangle();
         rect.height = 20;
-        rect.width = 10 * this.text.length;
+        rect.width = this._measureTextWidth;
         var point = new math.Point(x, y);
         return rect.isPointInReactangle(point) ? this : null;
 
@@ -501,6 +541,7 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
     }
 
     hitTest(x: number, y: number) {
+        console.log(1111);
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
             //child.localMatrix * point;
@@ -521,8 +562,10 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
             // }
 
             let HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
+             console.log(HitTestResult);
             if (HitTestResult) {
                 return HitTestResult;
+                
             }
             else {
                 return null;

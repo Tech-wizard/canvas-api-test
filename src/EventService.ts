@@ -7,7 +7,7 @@ class TouchEventService {
 
      eventList: MouseEvent[] = [];
      displayObjectList: DisplayObject[] = [];
-     //listenerList: TouchListener[] = []; 
+    
 
     currentX:number;
     currentY:number;
@@ -79,20 +79,6 @@ class TouchListener {
     }
 }
 
-class TouchEvents {
-    
-    x: number;
-    y: number;
-    type: number;
-    moveFlag = false;
-
-    constructor(x: number, y: number, type: number) {
-        this.x = x;
-        this.y = y;
-        this.type = type;
-    }
-
-}
 
 enum TouchType {
     MOUSEDOWN = 0,
