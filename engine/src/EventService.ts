@@ -14,7 +14,7 @@ class TouchEventService {
     endX:number;
     endY:number;
 
-    canMove=false;
+    isMove=false;
 
     constructor() {
         TouchEventService.count++;

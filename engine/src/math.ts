@@ -22,22 +22,23 @@
 // //    a.scaleX = 2;
 // }
 
-module math {
+namespace math {
 
     export class Rectangle {
-        
+
         x = 0;
         y = 0;
         width = 1;
         height = 1;
+
 
         isPointInReactangle(point: Point) {
 
             let rect = this;
             if (point.x < rect.width + rect.x &&
                 point.y < rect.height + rect.y &&
-                point.x >= rect.x &&
-                point.y >= rect.y) {
+                point.x > rect.x &&
+                point.y > rect.y) {
                 return true;
             }
             else {
@@ -123,7 +124,7 @@ module math {
             this.tx = tx;
             this.ty = ty;
         }
-
+     
         public a: number;
 
         public b: number;

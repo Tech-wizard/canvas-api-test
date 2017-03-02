@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		//"module": "commonjs",
+		//"watch": true,
+		"sourceMap": true,
+		"out": "./engine/out/engine.js",
+		"declaration": true
+	},
+	"files": [
+		"src/math.ts",
+		"src/EventService.ts",
+		"src/Ticker.ts",
+		"src/platforms/browser/driver.ts",
+		"src/displaylist.ts"
+	]
+}

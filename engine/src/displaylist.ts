@@ -1,0 +1,420 @@
+interface Drawable {
+
+    draw(context2D: CanvasRenderingContext2D);
+
+}
+
+interface Event {
+    addEventListener(type: string, listener: Function, useCapture?: boolean);
+    dispatchEvent(e: MouseEvent);
+}
+
+
+abstract class DisplayObject implements Drawable {
+
+    x: number = 0;
+
+    y: number = 0;
+
+    alpha: number = 1;
+
+    globalAppha: number = 1;
+
+    scaleX: number = 1;
+
+    scaleY: number = 1;
+
+    rotation: number = 0;
+
+    parent: DisplayObjectContainer;
+
+    children: DisplayObject[] = [];
+
+    globalMatrix: math.Matrix;
+
+    localMatrix: math.Matrix;
+
+    touchEnabled: boolean;
+
+    touchListenerList: TouchListener[] = [];
+
+    //捕获冒泡机制   通知整个父
+
+    constructor() {
+        this.globalMatrix = new math.Matrix();
+        this.localMatrix = new math.Matrix();
+    }
+
+    abstract hitTest(x: number, y: number);
+
+    abstract render(context2D: CanvasRenderingContext2D);   //模板方法模式
+
+    addEventListener(type: string, listener: Function, useCapture?: boolean) {
+
+        if (useCapture == null) {
+            useCapture = false;
+        }
+
+        let touchlistener = new TouchListener(type, listener, useCapture);
+        this.touchListenerList.push(touchlistener);
+
+    }
+
+    dispatchEvent(e: any) {
+
+        TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(e.target);
+
+        for (let i = TouchEventService.getInstance().displayObjectList.length - 1; i > 0; i--) {
+
+            if (TouchEventService.getInstance().displayObjectList[i].touchListenerList) {
+
+                for (let j = 0; j < TouchEventService.getInstance().displayObjectList[i].touchListenerList.length; j++) {
+
+                    if (TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].type == e.type && TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].capture == true) {
+
+                        TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].func();
+                    }
+                }
+
+            }
+        }
+
+        for (let i = 0; i < TouchEventService.getInstance().displayObjectList.length; i++) {
+
+            if (TouchEventService.getInstance().displayObjectList[i].touchListenerList) {
+
+                for (let j = 0; j < TouchEventService.getInstance().displayObjectList[i].touchListenerList.length; j++) {
+
+                    if (TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].type == e.type && TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].capture == false) {
+
+                        TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].func();
+                        //console.log("went2");
+                    }
+                }
+            }
+        }
+
+    }
+
+    draw(context2D: CanvasRenderingContext2D) {  //应有final
+
+        context2D.save();
+
+        if (this.parent) {
+
+            this.globalAppha = this.alpha * this.parent.globalAppha;
+        }
+        else {
+            this.globalAppha = this.alpha;
+        }
+
+        context2D.globalAlpha = this.globalAppha;
+
+        this.setMatrix();
+
+        context2D.setTransform(this.globalMatrix.a, this.globalMatrix.b, this.globalMatrix.c, this.globalMatrix.d, this.globalMatrix.tx, this.globalMatrix.ty);
+
+        this.render(context2D);
+    }
+
+    setMatrix() {
+
+        this.localMatrix.updateFromDisplayObject(this.x, this.y, this.scaleX, this.scaleY, this.rotation);
+
+        if (this.parent) {
+
+            this.globalMatrix = math.matrixAppendMatrix(this.localMatrix, this.parent.globalMatrix);
+
+        } else {
+            this.globalMatrix = new math.Matrix(1, 0, 0, 1, 0, 0);
+        }
+
+    }
+}
+
+class Bitmap extends DisplayObject {
+
+    image: HTMLImageElement;
+
+    //texture: string;
+
+    private _src = "";
+
+    private isLoaded = false;
+
+    constructor() {
+
+        super();
+        this.image = document.createElement('img');
+
+        // this.image.src = ad;
+        //this.isLoade = false;
+
+    }
+
+    set src(value: string) {
+        this._src = value;
+        this.isLoaded = false;
+    }
+
+    render(context2D: CanvasRenderingContext2D) {
+
+        context2D.globalAlpha = this.alpha;
+
+        if (this.isLoaded) {
+
+            context2D.drawImage(this.image, 0, 0);
+        }
+
+        else {
+
+            this.image.src = this._src;
+
+            this.image.onload = () => {
+
+                context2D.drawImage(this.image, 0, 0);
+
+                this.isLoaded = true;
+
+            }
+        }
+
+    }
+
+    hitTest(x: number, y: number) {
+
+        let rect = new math.Rectangle();
+
+        rect.x = rect.y = 0;
+
+        rect.width = this.image.width;
+
+        rect.height = this.image.height;
+
+        if (rect.isPointInReactangle(new math.Point(x, y))) {
+            return this;
+        }
+        else {
+            return null;
+        }
+
+    }
+}
+
+
+
+class TextField extends DisplayObject {
+
+    text: string = "";
+
+    font: string = "Arial";
+
+    size: string = "36";
+
+    _measureTextWidth = 0;
+
+    constructor() {
+        super();
+    }
+
+    render(context2D: CanvasRenderingContext2D) {
+
+        context2D.font = this.size + "px " + this.font;
+
+        context2D.fillText(this.text, 0, 0);
+
+        this._measureTextWidth = context2D.measureText(this.text).width;
+        //console.log(this._measureTextWidth);
+
+    }
+
+    hitTest(x: number, y: number) {
+
+        var rect = new math.Rectangle();
+        rect.height = parseInt(this.size);
+        rect.width = this._measureTextWidth;
+        var point = new math.Point(x, y);
+        //return rect.isPointInReactangle(point) ? this : null;
+        console.log(rect.isPointInReactangle(point));
+        if (rect.isPointInReactangle(point)) {
+            return this;
+        }
+        else {
+            return null;
+        }
+
+    }
+
+}
+
+
+
+
+
+class DisplayObjectContainer extends DisplayObject implements Drawable {
+
+    children: DisplayObject[] = [];
+
+    constructor() {
+        super();
+    }
+
+    render(context2D) {
+        for (let Drawable of this.children) {
+            Drawable.draw(context2D);
+        }
+    }
+
+    addChild(child: DisplayObject) {
+
+        if (this.children.indexOf(child) == -1) {
+            this.children.push(child);
+            child.parent = this;
+        }
+
+    }
+
+    removechild(child: DisplayObject) {
+
+        var index = this.children.indexOf(child);
+        if (index > -1) {
+            this.children.splice(index, 1);
+        }
+
+    }
+
+    removeall() {
+
+        this.children = [];
+
+    }
+
+    hitTest(x: number, y: number) {
+
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            //child.localMatrix * point;
+            let point = new math.Point(x, y);
+            let invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
+            let pointBaseOnChild = math.pointAppendMatrix(point, child.localMatrix);
+
+            // if (child.children) {
+            //     for (let j = child.children.length - 1; j >= 0; j--) {
+            //         let HitTestResult = child.children[j].hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
+            //         if (HitTestResult) {
+            //             return HitTestResult;
+            //         }
+            //         else {
+            //             return null;
+            //         }
+            //     }
+            // }
+
+            let HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
+            console.log(HitTestResult);
+            if (HitTestResult) {
+                return HitTestResult;
+            }
+            else {
+                return null;
+            }
+
+
+        }
+    }
+
+
+}
+
+// class Graphics {
+
+// }
+
+// class Shape extends DisplayObject {
+
+//     graphics: Graphics;
+
+//     draw(context2D: CanvasRenderingContext2D) {
+
+//         context2D.fillRect(0, 0, 0, 0);
+//     }
+// }
+
+class MoveClip extends Bitmap {
+
+    private advancedTime: number = 0;
+
+    private static FRAME_TIME = 20;
+
+    private static TOTAL_FRAME = 10;
+
+    private currentFraneIndex: number = 0;
+
+    private data: moveClipData;
+
+    constructor(data: moveClipData) {
+        super();
+        this.setMoveClipData(data);
+        this.play();
+
+    }
+
+    ticker = (deltaTime) => {
+        this.advancedTime += deltaTime;
+        if (this.advancedTime >= MoveClip.FRAME_TIME * MoveClip.TOTAL_FRAME) {
+            this.advancedTime -= MoveClip.FRAME_TIME * MoveClip.TOTAL_FRAME;
+        }
+        this.currentFraneIndex = Math.floor(this.advancedTime / MoveClip.FRAME_TIME);
+
+        let data = this.data;
+
+        let frameData = data.frames[this.currentFraneIndex];
+        let url = frameData.image;
+    }
+
+    stop() {
+        Ticker.getInstance().unregister(this.ticker);
+    }
+
+    pause() {
+
+    }
+
+    resume() {
+
+    }
+
+    play() {
+        Ticker.getInstance().register(this.ticker);
+    }
+
+
+    public setMoveClipData(data: moveClipData) {
+        this.data = data;
+        this.currentFraneIndex = 0;
+       // this.image = image;
+        //创建 / 更新 / 调用  分开
+    }
+}
+
+let moveClipData = {
+    name: "hero",
+
+    frame: [
+        { "image": "1.jpg" },
+        { "image": "2.jpg" }
+    ]
+}
+
+type moveClipData = {
+    name: string,
+    frames: any[]
+}
+
+type moveClipFrameData = {
+    image: string
+}
+
+
+
+
