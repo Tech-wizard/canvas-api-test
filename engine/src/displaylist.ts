@@ -1,3 +1,14 @@
+interface RenderContext {     //跨平台
+
+    drawImage();
+
+    filltext();
+
+    setTransform();
+
+    globalAphla: number;
+}
+
 interface Drawable {
 
     draw(context2D: CanvasRenderingContext2D);
@@ -188,7 +199,8 @@ class Bitmap extends DisplayObject {
 
         rect.height = this.image.height;
        let result = rect.isPointInReactangle(new math.Point(x, y));
-       //console.log ("bitmap",result,x,y,rect)
+          console.log("bitmap",rect.height,rect.width,x,y);
+    
         if (result) {
             return this;
         }
@@ -219,10 +231,9 @@ class TextField extends DisplayObject {
 
         context2D.font = this.size + "px " + this.font;
 
-        context2D.fillText(this.text, 0, 0);
+        context2D.fillText(this.text, 0, parseInt(this.size));
 
-        this._measureTextWidth = context2D.measureText(this.text).width;
-        //console.log(this._measureTextWidth);
+        this._measureTextWidth = context2D.measureText(this.text).width;  //180
 
     }
 
@@ -237,7 +248,7 @@ class TextField extends DisplayObject {
         let point = new math.Point(x, y);
         
         //return rect.isPointInReactangle(point) ? this : null;
-        //console.log(rect.isPointInReactangle(point));
+        console.log("tf",rect.height,rect.width,x,y);
         if (rect.isPointInReactangle(point)) {
             return this;
         }
@@ -248,10 +259,6 @@ class TextField extends DisplayObject {
     }
 
 }
-
-
-
-
 
 class DisplayObjectContainer extends DisplayObject implements Drawable {
 
@@ -297,6 +304,7 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
             let child = this.children[i];
             //child.localMatrix * point;
             let point = new math.Point(x, y);
+            console.log(x,y);
             let invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
             let pointBaseOnChild = math.pointAppendMatrix(point, invertChildLocalMatrix);
             let HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
@@ -310,6 +318,8 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
 
 
 }
+
+
 
 // class Graphics {
 

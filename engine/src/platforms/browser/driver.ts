@@ -4,18 +4,6 @@
 //      |-- TextField
 //      |-- Button
 
-
-interface RenderContext {     //跨平台
-
-    drawImage();
-
-    filltext();
-
-    setTransform();
-
-    globalAphla: number;
-}
-
 window.onload = () => {
 
     var canvas = document.getElementById("app") as HTMLCanvasElement;
@@ -94,39 +82,18 @@ window.onload = () => {
 
     let tf = new TextField();
     tf.text = "可以拖动的";
-    tf.x = 20;
-    tf.y = 40;
+    //tf.x = 20;
+    //tf.y = 40;
     tf.touchEnabled = true;
     
-    tf.addEventListener("mousedown",()=>{
+    tf.addEventListener("mousedown",(e:MouseEvent)=>{
         console.log("123");
     });
-    // tf.addEventListener("mousedown", () => {
-    //     TouchEventService.getInstance().isMove = true;
-    //     console.log("tfdown");
-    // });
-
-    // tf.addEventListener("mousemove", () => {
-
-    //     if (TouchEventService.getInstance().isMove == true) {
-    //         let dx = TouchEventService.getInstance().currentX - TouchEventService.getInstance().endX;
-    //         let dy = TouchEventService.getInstance().currentY - TouchEventService.getInstance().endY;
-    //         tf.x += dx;
-    //         tf.y += dy;
-    //        console.log("bm");
-    //     }
-
-    // });
-
-    // tf.addEventListener("mouseup", () => {
-    //     TouchEventService.getInstance().isMove = false;
-    //     console.log("tfup");
-    // });
 
     let Button = new Bitmap();
     Button.src = "image.JPG";
-    Button.x = 50;
-    Button.y = 50;
+    //Button.x = 50;
+    //Button.y = 50;
     Button.scaleX = 0.3;
     Button.scaleY = 0.3;
     Button.touchEnabled = true;
@@ -174,8 +141,9 @@ window.onload = () => {
     // stage.addChild(tf);
     stage.addChild(container);
 
-    container.addChild(tf);
+    //container.addChild(tf);
     container.addChild(Button);
+    container.addChild(tf);
 
 
 
@@ -199,8 +167,6 @@ window.onload = () => {
         let y = e.offsetY - 3;
       
         let result = stage.hitTest(x, y);
-          distanceX = x-result.x;
-          distanceY = y-result.y;
         let target = result;
 
         let list = [];
@@ -310,47 +276,8 @@ window.onload = () => {
                 list[i].dispatchEvent(E);
                 //console.log(e);
             }
-
-
         }
     };
-
-    // //  window.onclick = (e)=>{
-
-    // //     let x = e.offsetX - 3;
-    // //     let y = e.offsetY - 3;
-    // //     //alert(x+","+y);
-    // //      let result = stage.hitTest(x, y);
-    // //      let target = result;
-    // //      if (result) {
-
-    // //         while (result.parent) {
-    // //             let type = "onclick";
-    // //             let currentTarget =  result.parent;
-    // //             let e = {type,target,currentTarget}
-    // //             result.parent.dispatchEvent(e);
-    // //             console.log(e);
-    // //             result = result.parent;
-    // //         }
-    // //     }
-    // // };
-
-
-    // setTimeout(function () {
-    //     let result = list.hitTest(50, 50);
-    //     if (result) {
-    //         do {
-    //             //result.dispatchEvent(e);
-    //         }
-    //         while (result.parent) {
-    //             //result.dispatchEvent(e);
-    //             result = result.parent;
-    //         }
-    //     }
-
-    //     console.log(result);
-    // }, 1000);
-
 
 };
 
