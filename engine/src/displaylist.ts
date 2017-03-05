@@ -60,40 +60,40 @@ abstract class DisplayObject implements Drawable {
 
     }
 
+    removeEventListener(child:TouchListener){
+         var index = this.touchListenerList.indexOf(child);
+        if (index > -1) {
+            this.touchListenerList.splice(index, 1);
+        }
+
+    }
+
     dispatchEvent(e: any) {
+//e.target ==this&&
+    
+      if(this.touchListenerList!=null){
 
-        TouchEventService.getInstance().getDispalyObjectListFromMAOPAO(e.target);
+                for (let j = 0; j < this.touchListenerList.length; j++) {
 
-        for (let i = TouchEventService.getInstance().displayObjectList.length - 1; i > 0; i--) {
+                    if (this.touchListenerList[j].type == e.type && this.touchListenerList[j].capture == true) {
 
-            if (TouchEventService.getInstance().displayObjectList[i].touchListenerList) {
-
-                for (let j = 0; j < TouchEventService.getInstance().displayObjectList[i].touchListenerList.length; j++) {
-
-                    if (TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].type == e.type && TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].capture == true) {
-
-                        TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].func();
+                        this.touchListenerList[j].func();
+                      
                     }
                 }
 
-            }
-        }
 
-        for (let i = 0; i < TouchEventService.getInstance().displayObjectList.length; i++) {
+                for (let j = 0; j < this.touchListenerList.length; j++) {
 
-            if (TouchEventService.getInstance().displayObjectList[i].touchListenerList) {
+                    if (this.touchListenerList[j].type == e.type && this.touchListenerList[j].capture == false) {
 
-                for (let j = 0; j < TouchEventService.getInstance().displayObjectList[i].touchListenerList.length; j++) {
-
-                    if (TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].type == e.type && TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].capture == false) {
-
-                        TouchEventService.getInstance().displayObjectList[i].touchListenerList[j].func();
-                        //console.log("went2");
+                        this.touchListenerList[j].func();
+                     
                     }
                 }
-            }
-        }
+      }
 
+       
     }
 
     draw(context2D: CanvasRenderingContext2D) {  //应有final
@@ -297,21 +297,8 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
             let point = new math.Point(x, y);
             let invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
             let pointBaseOnChild = math.pointAppendMatrix(point, child.localMatrix);
-
-            // if (child.children) {
-            //     for (let j = child.children.length - 1; j >= 0; j--) {
-            //         let HitTestResult = child.children[j].hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
-            //         if (HitTestResult) {
-            //             return HitTestResult;
-            //         }
-            //         else {
-            //             return null;
-            //         }
-            //     }
-            // }
-
             let HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
-            console.log(HitTestResult);
+           // console.log(HitTestResult);
             if (HitTestResult) {
                 return HitTestResult;
             }

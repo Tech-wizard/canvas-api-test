@@ -93,32 +93,32 @@ window.onload = () => {
     }, true);
 
     let tf = new TextField();
-    tf.text = "可以拖动的话";
+    tf.text = "可以拖动的";
     tf.x = 20;
     tf.y = 40;
     tf.touchEnabled = true;
 
-    tf.addEventListener("mousedown", () => {
-        TouchEventService.getInstance().isMove = true;
-        console.log("tfdown");
-    });
+    // tf.addEventListener("mousedown", () => {
+    //     TouchEventService.getInstance().isMove = true;
+    //     console.log("tfdown");
+    // });
 
-    tf.addEventListener("mousemove", () => {
+    // tf.addEventListener("mousemove", () => {
 
-        if (TouchEventService.getInstance().isMove == true) {
-            let dx = TouchEventService.getInstance().currentX - TouchEventService.getInstance().endX;
-            let dy = TouchEventService.getInstance().currentY - TouchEventService.getInstance().endY;
-            tf.x += dx;
-            tf.y += dy;
-           console.log("bm");
-        }
+    //     if (TouchEventService.getInstance().isMove == true) {
+    //         let dx = TouchEventService.getInstance().currentX - TouchEventService.getInstance().endX;
+    //         let dy = TouchEventService.getInstance().currentY - TouchEventService.getInstance().endY;
+    //         tf.x += dx;
+    //         tf.y += dy;
+    //        console.log("bm");
+    //     }
 
-    });
+    // });
 
-    tf.addEventListener("mouseup", () => {
-        TouchEventService.getInstance().isMove = false;
-        console.log("tfup");
-    });
+    // tf.addEventListener("mouseup", () => {
+    //     TouchEventService.getInstance().isMove = false;
+    //     console.log("tfup");
+    // });
 
     let Button = new Bitmap();
     Button.src = "image.JPG";
@@ -130,39 +130,42 @@ window.onload = () => {
     // Button.addEventListener("mousedown", () => { alert("mousedown") });
     // Button.addEventListener("mouseup", () => { alert("mouseup") });
 
-
+    var distanceX;
+    var distanceY;
     Button.addEventListener("mousedown", () => {
-        if( TouchEventService.getInstance().isMove==false){
-        TouchEventService.getInstance().isMove = true;
-         console.log("down");
+        if (TouchEventService.getInstance().isMove == false) {
+            TouchEventService.getInstance().isMove = true;
+            console.log("down");
         }
-       
+
     });
 
     Button.addEventListener("mousemove", () => {
 
         if (TouchEventService.getInstance().isMove == true) {
-            Button.x = TouchEventService.getInstance().currentX;
-            Button.y = TouchEventService.getInstance().currentY;
-             console.log("bm2");
+
+            Button.x = TouchEventService.getInstance().currentX-distanceX;
+            Button.y = TouchEventService.getInstance().currentY-distanceY;
+            console.log("bm2");
         }
 
     });
 
     Button.addEventListener("mouseup", () => {
-         if( TouchEventService.getInstance().isMove==true){
-        TouchEventService.getInstance().isMove = false;
-         console.log("up");
-         }
-       
+        if (TouchEventService.getInstance().isMove == true) {
+            TouchEventService.getInstance().isMove = false;
+            console.log("up");
+        }
+
     });
 
     // stage.addChild(Button);
     // stage.addChild(tf);
     stage.addChild(container);
 
+    container.addChild(tf);
     container.addChild(Button);
-    //container.addChild(tf);
+
 
 
     setInterval(() => {
@@ -185,28 +188,6 @@ window.onload = () => {
 
     }, 60)
 
-    window.onmouseup = (e) => {
-
-        let x = e.offsetX - 3;
-        let y = e.offsetY - 3;
-       
-        let result = stage.hitTest(x, y);
-        //console.log(result);
-        let target = result;
-        if (result) {
-
-            while (result.parent) {
-                let type = "mouseup";
-                let currentTarget = result.parent;
-
-                let e = { type, target, currentTarget }
-                result.parent.dispatchEvent(e);
-                console.log(e);
-                result = result.parent;
-            }
-        }
-
-    };
 
     window.onmousedown = (e) => {
 
@@ -214,22 +195,83 @@ window.onload = () => {
         let y = e.offsetY - 3;
         TouchEventService.getInstance().currentX = x;
         TouchEventService.getInstance().currentY = y;
+       
         //alert(x+","+y);
         let result = stage.hitTest(x, y);
-
+          distanceX = x-result.x;
+          distanceY = y-result.y;
         let target = result;
-        if (result) {
+
+        let list = [];
+        list.push(result);
+        if (result && result.touchEnabled == true) {
 
             while (result.parent) {
+                list.push(result.parent);
+                result = result.parent;
+
+            }
+
+            for (let i = list.length - 1; i > 0; i--) {  //捕获在先
                 let type = "mousedown";
                 let currentTarget = result.parent;
                 let e = { type, target, currentTarget }
-                result.parent.dispatchEvent(e);
-                console.log(e);
-                result = result.parent;
+                list[i].dispatchEvent(e);
+                //console.log(e);
             }
+
+            for (let i = 0; i < list.length; i++) {  //冒泡在后
+                let type = "mousedown";
+                let currentTarget = result.parent;
+                let e = { type, target, currentTarget }
+                list[i].dispatchEvent(e);
+                //console.log(e);
+            }
+
+
         }
-    }
+    };
+
+    window.onmouseup = (e) => {
+
+        let x = e.offsetX - 3;
+        let y = e.offsetY - 3;
+     
+        let result = stage.hitTest(x, y);
+
+        let target = result;
+        let list = [];
+        list.push(result);
+
+        if (result && result.touchEnabled == true) {
+
+            while (result.parent) {
+                list.push(result.parent);
+                result = result.parent;
+
+            }
+
+            for (let i = list.length - 1; i > 0; i--) {  //捕获在先
+                let type = "mouseup";
+                let currentTarget = result.parent;
+                let e = { type, target, currentTarget }
+                list[i].dispatchEvent(e);
+                //console.log(e);
+            }
+
+            for (let i = 0; i < list.length; i++) {  //冒泡在后
+                let type = "mouseup";
+                let currentTarget = result.parent;
+                let e = { type, target, currentTarget }
+                list[i].dispatchEvent(e);
+                //console.log(e);
+            }
+
+
+        }
+
+    };
+
 
     window.onmousemove = (e) => {
 
@@ -245,16 +287,33 @@ window.onload = () => {
         let result = stage.hitTest(x, y);
 
         let target = result;
-        if (result) {
+        let list = [];
+        list.push(result);
+        if (result && result.touchEnabled == true) {
 
             while (result.parent) {
+                list.push(result.parent);
+                result = result.parent;
+
+            }
+
+            for (let i = list.length - 1; i > 0; i--) {  //捕获在先
                 let type = "mousemove";
                 let currentTarget = result.parent;
                 let e = { type, target, currentTarget }
-                result.parent.dispatchEvent(e);
-                console.log(e);
-                result = result.parent;
+                list[i].dispatchEvent(e);
+                //console.log(e);
             }
+
+            for (let i = 0; i < list.length; i++) {  //冒泡在后
+                let type = "mousemove";
+                let currentTarget = result.parent;
+                let e = { type, target, currentTarget }
+                list[i].dispatchEvent(e);
+                //console.log(e);
+            }
+
+
         }
     };
 
