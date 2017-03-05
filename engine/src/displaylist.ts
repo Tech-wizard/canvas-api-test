@@ -60,40 +60,39 @@ abstract class DisplayObject implements Drawable {
 
     }
 
-    removeEventListener(child:TouchListener){
-         var index = this.touchListenerList.indexOf(child);
+    removeEventListener(child: TouchListener) {
+        var index = this.touchListenerList.indexOf(child);
         if (index > -1) {
             this.touchListenerList.splice(index, 1);
         }
 
     }
 
-    dispatchEvent(e: any) {
-//e.target ==this&&
-    
-      if(this.touchListenerList!=null){
+    dispatchEvent(E: any) {
 
-                for (let j = 0; j < this.touchListenerList.length; j++) {
+        if (this.touchListenerList != null) {
 
-                    if (this.touchListenerList[j].type == e.type && this.touchListenerList[j].capture == true) {
+            for (let j = 0; j < this.touchListenerList.length; j++) {
 
-                        this.touchListenerList[j].func();
-                      
-                    }
+                if (this.touchListenerList[j].type == E.type && this.touchListenerList[j].capture == true) {
+
+                    this.touchListenerList[j].func(E.e);
+
                 }
+            }
 
 
-                for (let j = 0; j < this.touchListenerList.length; j++) {
+            for (let j = 0; j < this.touchListenerList.length; j++) {
 
-                    if (this.touchListenerList[j].type == e.type && this.touchListenerList[j].capture == false) {
+                if (this.touchListenerList[j].type == E.type && this.touchListenerList[j].capture == false) {
 
-                        this.touchListenerList[j].func();
-                     
-                    }
+                    this.touchListenerList[j].func(E.e);
+
                 }
-      }
+            }
+        }
 
-       
+
     }
 
     draw(context2D: CanvasRenderingContext2D) {  //应有final
@@ -185,13 +184,12 @@ class Bitmap extends DisplayObject {
 
         let rect = new math.Rectangle();
 
-        rect.x = rect.y = 0;
-
         rect.width = this.image.width;
 
         rect.height = this.image.height;
-
-        if (rect.isPointInReactangle(new math.Point(x, y))) {
+       let result = rect.isPointInReactangle(new math.Point(x, y));
+       //console.log ("bitmap",result,x,y,rect)
+        if (result) {
             return this;
         }
         else {
@@ -230,12 +228,16 @@ class TextField extends DisplayObject {
 
     hitTest(x: number, y: number) {
 
-        var rect = new math.Rectangle();
+        let rect = new math.Rectangle();
+
         rect.height = parseInt(this.size);
+
         rect.width = this._measureTextWidth;
-        var point = new math.Point(x, y);
+
+        let point = new math.Point(x, y);
+        
         //return rect.isPointInReactangle(point) ? this : null;
-        console.log(rect.isPointInReactangle(point));
+        //console.log(rect.isPointInReactangle(point));
         if (rect.isPointInReactangle(point)) {
             return this;
         }
@@ -296,16 +298,12 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
             //child.localMatrix * point;
             let point = new math.Point(x, y);
             let invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
-            let pointBaseOnChild = math.pointAppendMatrix(point, child.localMatrix);
+            let pointBaseOnChild = math.pointAppendMatrix(point, invertChildLocalMatrix);
             let HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
-           // console.log(HitTestResult);
+             //console.log(HitTestResult);
             if (HitTestResult) {
                 return HitTestResult;
             }
-            else {
-                return null;
-            }
-
 
         }
     }
@@ -337,9 +335,9 @@ class MoveClip extends Bitmap {
 
     private currentFraneIndex: number = 0;
 
-    private data: moveClipData;
+    private data: MovieClipData;
 
-    constructor(data: moveClipData) {
+    constructor(data: MovieClipData) {
         super();
         this.setMoveClipData(data);
         this.play();
@@ -376,10 +374,10 @@ class MoveClip extends Bitmap {
     }
 
 
-    public setMoveClipData(data: moveClipData) {
+    public setMoveClipData(data: MovieClipData) {
         this.data = data;
         this.currentFraneIndex = 0;
-       // this.image = image;
+        // this.image = image;
         //创建 / 更新 / 调用  分开
     }
 }
@@ -393,13 +391,13 @@ let moveClipData = {
     ]
 }
 
-type moveClipData = {
+type MovieClipData = {
     name: string,
-    frames: any[]
+    frames: MovieClipFrameData[]
 }
 
-type moveClipFrameData = {
-    image: string
+type MovieClipFrameData = {
+    "image": string
 }
 
 

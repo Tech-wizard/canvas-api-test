@@ -97,7 +97,10 @@ window.onload = () => {
     tf.x = 20;
     tf.y = 40;
     tf.touchEnabled = true;
-
+    
+    tf.addEventListener("mousedown",()=>{
+        console.log("123");
+    });
     // tf.addEventListener("mousedown", () => {
     //     TouchEventService.getInstance().isMove = true;
     //     console.log("tfdown");
@@ -132,29 +135,37 @@ window.onload = () => {
 
     var distanceX;
     var distanceY;
-    Button.addEventListener("mousedown", () => {
+    Button.addEventListener("mousedown", (e:MouseEvent) => {
+        
         if (TouchEventService.getInstance().isMove == false) {
             TouchEventService.getInstance().isMove = true;
-            console.log("down");
+           
         }
+        TouchEventService.getInstance().currentX = e.x;
+        TouchEventService.getInstance().currentY = e.y; 
+        distanceX = TouchEventService.getInstance().currentX-Button.x;
+        distanceY = TouchEventService.getInstance().currentY-Button.y;
+
 
     });
 
-    Button.addEventListener("mousemove", () => {
+    Button.addEventListener("mousemove", (e:MouseEvent) => {
 
         if (TouchEventService.getInstance().isMove == true) {
 
             Button.x = TouchEventService.getInstance().currentX-distanceX;
             Button.y = TouchEventService.getInstance().currentY-distanceY;
-            console.log("bm2");
+          
         }
+        TouchEventService.getInstance().currentX = e.x;
+        TouchEventService.getInstance().currentY = e.y;
 
     });
 
-    Button.addEventListener("mouseup", () => {
+    Button.addEventListener("mouseup", (e:MouseEvent) => {
         if (TouchEventService.getInstance().isMove == true) {
             TouchEventService.getInstance().isMove = false;
-            console.log("up");
+           
         }
 
     });
@@ -176,13 +187,6 @@ window.onload = () => {
 
         context2D.clearRect(0, 0, canvas.width, canvas.height);
 
-        //context2D.translate(tf1.transX,tf1.transY++);
-        //context2D.translate(img.transX++,img.transY);
-        //Button.rotation++;
-        //tf1.transY++;
-        //Button.transX++;
-        //stage.transX++;
-
         stage.draw(context2D);
         context2D.restore();
 
@@ -193,10 +197,7 @@ window.onload = () => {
 
         let x = e.offsetX - 3;
         let y = e.offsetY - 3;
-        TouchEventService.getInstance().currentX = x;
-        TouchEventService.getInstance().currentY = y;
-       
-        //alert(x+","+y);
+      
         let result = stage.hitTest(x, y);
           distanceX = x-result.x;
           distanceY = y-result.y;
@@ -215,17 +216,17 @@ window.onload = () => {
             for (let i = list.length - 1; i > 0; i--) {  //捕获在先
                 let type = "mousedown";
                 let currentTarget = result.parent;
-                let e = { type, target, currentTarget }
-                list[i].dispatchEvent(e);
-                //console.log(e);
+                let E = { type, target, currentTarget,e }
+                list[i].dispatchEvent(E);
+               
             }
 
             for (let i = 0; i < list.length; i++) {  //冒泡在后
                 let type = "mousedown";
                 let currentTarget = result.parent;
-                let e = { type, target, currentTarget }
-                list[i].dispatchEvent(e);
-                //console.log(e);
+                let E = { type, target, currentTarget,e }
+                list[i].dispatchEvent(E);
+              
             }
 
 
@@ -248,22 +249,21 @@ window.onload = () => {
             while (result.parent) {
                 list.push(result.parent);
                 result = result.parent;
-
             }
 
             for (let i = list.length - 1; i > 0; i--) {  //捕获在先
                 let type = "mouseup";
                 let currentTarget = result.parent;
-                let e = { type, target, currentTarget }
-                list[i].dispatchEvent(e);
+                let E = { type, target, currentTarget,e }
+                list[i].dispatchEvent(E);
                 //console.log(e);
             }
 
             for (let i = 0; i < list.length; i++) {  //冒泡在后
                 let type = "mouseup";
                 let currentTarget = result.parent;
-                let e = { type, target, currentTarget }
-                list[i].dispatchEvent(e);
+                let E = { type, target, currentTarget,e }
+                list[i].dispatchEvent(E);
                 //console.log(e);
             }
 
@@ -278,11 +278,9 @@ window.onload = () => {
 
         let x = e.offsetX - 3;
         let y = e.offsetY - 3;
-        TouchEventService.getInstance().endX = TouchEventService.getInstance().currentX;
-        TouchEventService.getInstance().endY = TouchEventService.getInstance().currentY;
-        TouchEventService.getInstance().currentX = x;
-        TouchEventService.getInstance().currentY = y;
-        //alert(x+","+y);
+      
+        // TouchEventService.getInstance().currentX = x;
+        // TouchEventService.getInstance().currentY = y;
 
         let result = stage.hitTest(x, y);
 
@@ -300,16 +298,16 @@ window.onload = () => {
             for (let i = list.length - 1; i > 0; i--) {  //捕获在先
                 let type = "mousemove";
                 let currentTarget = result.parent;
-                let e = { type, target, currentTarget }
-                list[i].dispatchEvent(e);
+                let E = { type, target, currentTarget,e }
+                list[i].dispatchEvent(E);
                 //console.log(e);
             }
 
             for (let i = 0; i < list.length; i++) {  //冒泡在后
                 let type = "mousemove";
                 let currentTarget = result.parent;
-                let e = { type, target, currentTarget }
-                list[i].dispatchEvent(e);
+                let E = { type, target, currentTarget,e }
+                list[i].dispatchEvent(E);
                 //console.log(e);
             }
 
@@ -317,25 +315,25 @@ window.onload = () => {
         }
     };
 
-    //  window.onclick = (e)=>{
+    // //  window.onclick = (e)=>{
 
-    //     let x = e.offsetX - 3;
-    //     let y = e.offsetY - 3;
-    //     //alert(x+","+y);
-    //      let result = stage.hitTest(x, y);
-    //      let target = result;
-    //      if (result) {
+    // //     let x = e.offsetX - 3;
+    // //     let y = e.offsetY - 3;
+    // //     //alert(x+","+y);
+    // //      let result = stage.hitTest(x, y);
+    // //      let target = result;
+    // //      if (result) {
 
-    //         while (result.parent) {
-    //             let type = "onclick";
-    //             let currentTarget =  result.parent;
-    //             let e = {type,target,currentTarget}
-    //             result.parent.dispatchEvent(e);
-    //             console.log(e);
-    //             result = result.parent;
-    //         }
-    //     }
-    // };
+    // //         while (result.parent) {
+    // //             let type = "onclick";
+    // //             let currentTarget =  result.parent;
+    // //             let e = {type,target,currentTarget}
+    // //             result.parent.dispatchEvent(e);
+    // //             console.log(e);
+    // //             result = result.parent;
+    // //         }
+    // //     }
+    // // };
 
 
     // setTimeout(function () {
