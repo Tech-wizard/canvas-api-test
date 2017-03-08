@@ -21,8 +21,9 @@
 // //    a.x = 100;
 // //    a.scaleX = 2;
 // }
+namespace engine {
 
-namespace math {
+
 
     export class Rectangle {
 
@@ -124,7 +125,7 @@ namespace math {
             this.tx = tx;
             this.ty = ty;
         }
-     
+
         public a: number;
 
         public b: number;
@@ -157,3 +158,4 @@ namespace math {
         }
     }
 }
+

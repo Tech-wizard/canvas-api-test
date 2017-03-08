@@ -6,7 +6,7 @@ class TouchEventService {
     _touchStatus: boolean = false;
 
      eventList: MouseEvent[] = [];
-     displayObjectList: DisplayObject[] = [];
+     displayObjectList: engine.DisplayObject[] = [];
     
 
     currentX:number;
@@ -29,14 +29,14 @@ class TouchEventService {
         return TouchEventService.instance;
     }
 
-    public getDispalyObjectListFromMAOPAO(child:DisplayObject){
+    public getDispalyObjectListFromMAOPAO(child:engine.DisplayObject){
              if(child){
                  this.displayObjectList.push(child);
                  this.getDispalyObjectListFromMAOPAO(child.parent);
              }
     }
 
-    public getDispalyObjectListFromBUHUO(parent:DisplayObject){
+    public getDispalyObjectListFromBUHUO(parent:engine.DisplayObject){
              if(parent){
                  this.displayObjectList.push(parent);
                  if(parent.children){
@@ -65,8 +65,8 @@ enum ErrorCode {
 //                  preOrder(node.lastElementChild);
 //              }
 //          }
-
-class TouchListener {
+namespace engine {
+export class TouchListener {
 
     type: string;
     func: Function;
@@ -80,9 +80,10 @@ class TouchListener {
 }
 
 
-enum TouchType {
+export enum TouchType {
     MOUSEDOWN = 0,
     MOUSEUP = 1,
     CLICK = 2,
     MOUSEMOVE = 3
+}
 }

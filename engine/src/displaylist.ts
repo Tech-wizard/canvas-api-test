@@ -1,4 +1,6 @@
-interface RenderContext {     //跨平台
+namespace engine {
+
+export interface RenderContext {     //跨平台
 
     drawImage();
 
@@ -9,19 +11,19 @@ interface RenderContext {     //跨平台
     globalAphla: number;
 }
 
-interface Drawable {
+export interface Drawable {
 
     draw(context2D: CanvasRenderingContext2D);
 
 }
 
-interface Event {
+export interface Event {
     addEventListener(type: string, listener: Function, useCapture?: boolean);
     dispatchEvent(e: MouseEvent);
 }
 
 
-abstract class DisplayObject implements Drawable {
+export abstract class DisplayObject implements Drawable {
 
     x: number = 0;
 
@@ -41,9 +43,9 @@ abstract class DisplayObject implements Drawable {
 
     children: DisplayObject[] = [];
 
-    globalMatrix: math.Matrix;
+    globalMatrix: engine.Matrix;
 
-    localMatrix: math.Matrix;
+    localMatrix: engine.Matrix;
 
     touchEnabled: boolean;
 
@@ -52,8 +54,8 @@ abstract class DisplayObject implements Drawable {
     //捕获冒泡机制   通知整个父
 
     constructor() {
-        this.globalMatrix = new math.Matrix();
-        this.localMatrix = new math.Matrix();
+        this.globalMatrix = new engine.Matrix();
+        this.localMatrix = new engine.Matrix();
     }
 
     abstract hitTest(x: number, y: number);
@@ -133,16 +135,16 @@ abstract class DisplayObject implements Drawable {
 
         if (this.parent) {
 
-            this.globalMatrix = math.matrixAppendMatrix(this.localMatrix, this.parent.globalMatrix);
+            this.globalMatrix = engine.matrixAppendMatrix(this.localMatrix, this.parent.globalMatrix);
 
         } else {
-            this.globalMatrix = new math.Matrix(1, 0, 0, 1, 0, 0);
+            this.globalMatrix = new engine.Matrix(1, 0, 0, 1, 0, 0);
         }
 
     }
 }
 
-class Bitmap extends DisplayObject {
+export class Bitmap extends DisplayObject {
 
     image: HTMLImageElement;
 
@@ -193,12 +195,12 @@ class Bitmap extends DisplayObject {
 
     hitTest(x: number, y: number) {
 
-        let rect = new math.Rectangle();
+        let rect = new engine.Rectangle();
 
         rect.width = this.image.width;
 
         rect.height = this.image.height;
-       let result = rect.isPointInReactangle(new math.Point(x, y));
+       let result = rect.isPointInReactangle(new engine.Point(x, y));
           console.log("bitmap",rect.height,rect.width,x,y);
     
         if (result) {
@@ -213,7 +215,7 @@ class Bitmap extends DisplayObject {
 
 
 
-class TextField extends DisplayObject {
+export class TextField extends DisplayObject {
 
     text: string = "";
 
@@ -239,13 +241,13 @@ class TextField extends DisplayObject {
 
     hitTest(x: number, y: number) {
 
-        let rect = new math.Rectangle();
+        let rect = new engine.Rectangle();
 
         rect.height = parseInt(this.size);
 
         rect.width = this._measureTextWidth;
 
-        let point = new math.Point(x, y);
+        let point = new engine.Point(x, y);
         
         //return rect.isPointInReactangle(point) ? this : null;
         console.log("tf",rect.height,rect.width,x,y);
@@ -260,7 +262,7 @@ class TextField extends DisplayObject {
 
 }
 
-class DisplayObjectContainer extends DisplayObject implements Drawable {
+export class DisplayObjectContainer extends DisplayObject implements Drawable {
 
     children: DisplayObject[] = [];
 
@@ -303,10 +305,10 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
             //child.localMatrix * point;
-            let point = new math.Point(x, y);
+            let point = new engine.Point(x, y);
             console.log(x,y);
-            let invertChildLocalMatrix = math.invertMatrix(child.localMatrix);
-            let pointBaseOnChild = math.pointAppendMatrix(point, invertChildLocalMatrix);
+            let invertChildLocalMatrix = engine.invertMatrix(child.localMatrix);
+            let pointBaseOnChild = engine.pointAppendMatrix(point, invertChildLocalMatrix);
             let HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
              //console.log(HitTestResult);
             if (HitTestResult) {
@@ -335,7 +337,7 @@ class DisplayObjectContainer extends DisplayObject implements Drawable {
 //     }
 // }
 
-class MoveClip extends Bitmap {
+export class MoveClip extends Bitmap {
 
     private advancedTime: number = 0;
 
@@ -347,7 +349,7 @@ class MoveClip extends Bitmap {
 
     private data: MovieClipData;
 
-    constructor(data: MovieClipData) {
+    constructor(data: engine.MovieClipData) {
         super();
         this.setMoveClipData(data);
         this.play();
@@ -368,7 +370,7 @@ class MoveClip extends Bitmap {
     }
 
     stop() {
-        Ticker.getInstance().unregister(this.ticker);
+        engine.Ticker.getInstance().unregister(this.ticker);
     }
 
     pause() {
@@ -380,11 +382,11 @@ class MoveClip extends Bitmap {
     }
 
     play() {
-        Ticker.getInstance().register(this.ticker);
+        engine.Ticker.getInstance().register(this.ticker);
     }
 
 
-    public setMoveClipData(data: MovieClipData) {
+    public setMoveClipData(data: engine.MovieClipData) {
         this.data = data;
         this.currentFraneIndex = 0;
         // this.image = image;
@@ -401,15 +403,15 @@ let moveClipData = {
     ]
 }
 
-type MovieClipData = {
+export type MovieClipData = {
     name: string,
     frames: MovieClipFrameData[]
 }
 
-type MovieClipFrameData = {
+export type MovieClipFrameData = {
     "image": string
 }
 
 
-
+}
 

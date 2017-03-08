@@ -3,164 +3,27 @@
 // |-itemRenderer
 //      |-- TextField
 //      |-- Button
+namespace engine {
 
-window.onload = () => {
+ export let run = (canvas: HTMLCanvasElement) => {
 
-    var canvas = document.getElementById("app") as HTMLCanvasElement;
-    var context2D = canvas.getContext("2d");
-    var DEG = Math.PI / 180;
-
-    //     var m1 = new math.Matrix(2,Math.cos(30 * DEG),Math.sin);
-
-    //    // a c tx     x   ax + cy + tx
-    //    // b d ty  *  y = bx + dy + ty 
-    //    // 0 0 1      1        1
-
-    //    `
-    //    2 0 100
-    //    0 1 0
-    //    0 0 1 
-    //    `
-
-    // //    a.x = 100;
-    // //    a.scaleX = 2;
-
-    // let lastNow = Date.now();
-
-    // let frameHandler = () => {
-    //     console.log("111");
-
-    //     let now = Date.now();
-    //     let deltaTime = lastNow - now;
-    //     Ticker.getInstance().notify(deltaTime);
-    //     context2D.save();
-    //     context2D.setTransform(1, 0, 0, 1, 0, 0);
-    //     context2D.clearRect(0, 0, canvas.width, canvas.height);
-    //     //stage.updateMatrix();//3d引擎需要分开
-    //     stage.draw(context2D);
-    //     context2D.restore();
-    //     lastNow = now;
-    //     window.requestAnimationFrame(frameHandler);
-
-    // }
-    // window.requestAnimationFrame(frameHandler);
-
-    // let speed = 10;
-
-    // Ticker.getInstance().register((deltaTime) => {
-
-    // Button.transX = speed * deltaTime;
-
-    // // h = 1/2 * g * t * t;//Tween
-
-    // // s+=1;   //新手
-
-    // // v = g * deltaTime;
-    // // s= s0 + v *deltaTime; //入门
-
-    // // for(let i = 0;i<deltaTime/10;i++){  //切片
-    // //     doit(10);
-    // // }
-
-    // // function doit(deltaTime){
-    // //    v = g * deltaTime;
-    // // s= s0 + v *deltaTime;   
-    // // }
-
-    // });
-
-    var stage = new DisplayObjectContainer();
-    var container = new DisplayObjectContainer();
-
-    stage.addEventListener("mousedown", () => {
-        console.log("stage");
-    });
-
-    container.addEventListener("mousedown", () => {
-        console.log("container");
-    }, true);
-
-    let tf = new TextField();
-    tf.text = "可以拖动的";
-    //tf.x = 20;
-    //tf.y = 40;
-    tf.touchEnabled = true;
-    
-    tf.addEventListener("mousedown",(e:MouseEvent)=>{
-        console.log("123");
-    });
-
-    let Button = new Bitmap();
-    Button.src = "image.JPG";
-    //Button.x = 50;
-    //Button.y = 50;
-    Button.scaleX = 0.3;
-    Button.scaleY = 0.3;
-    Button.touchEnabled = true;
-    // Button.addEventListener("mousedown", () => { alert("mousedown") });
-    // Button.addEventListener("mouseup", () => { alert("mouseup") });
-
-    var distanceX;
-    var distanceY;
-    Button.addEventListener("mousedown", (e:MouseEvent) => {
-        
-        if (TouchEventService.getInstance().isMove == false) {
-            TouchEventService.getInstance().isMove = true;
-           
-        }
-        TouchEventService.getInstance().currentX = e.x;
-        TouchEventService.getInstance().currentY = e.y; 
-        distanceX = TouchEventService.getInstance().currentX-Button.x;
-        distanceY = TouchEventService.getInstance().currentY-Button.y;
-
-
-    });
-
-    Button.addEventListener("mousemove", (e:MouseEvent) => {
-
-        if (TouchEventService.getInstance().isMove == true) {
-
-            Button.x = TouchEventService.getInstance().currentX-distanceX;
-            Button.y = TouchEventService.getInstance().currentY-distanceY;
-          
-        }
-        TouchEventService.getInstance().currentX = e.x;
-        TouchEventService.getInstance().currentY = e.y;
-
-    });
-
-    Button.addEventListener("mouseup", (e:MouseEvent) => {
-        if (TouchEventService.getInstance().isMove == true) {
-            TouchEventService.getInstance().isMove = false;
-           
+        var stage = new DisplayObjectContainer();
+        let context2D = canvas.getContext("2d");
+        let lastNow = Date.now();
+        let frameHandler = () => {
+            let now = Date.now();
+            let deltaTime = now - lastNow;
+            Ticker.getInstance().notify(deltaTime);
+            context2D.clearRect(0, 0, canvas.width, canvas.height);
+            context2D.save();
+            stage.draw(context2D);
+            context2D.restore();
+            lastNow = now;
+            window.requestAnimationFrame(frameHandler);
         }
 
-    });
-
-    // stage.addChild(Button);
-    // stage.addChild(tf);
-    stage.addChild(container);
-
-    //container.addChild(tf);
-    container.addChild(Button);
-    container.addChild(tf);
-
-
-
-    setInterval(() => {
-
-        context2D.save();
-
-        context2D.setTransform(1, 0, 0, 1, 0, 0);
-
-        context2D.clearRect(0, 0, canvas.width, canvas.height);
-
-        stage.draw(context2D);
-        context2D.restore();
-
-    }, 60)
-
-
+        window.requestAnimationFrame(frameHandler);
+       
     window.onmousedown = (e) => {
 
         let x = e.offsetX - 3;
@@ -279,6 +142,90 @@ window.onload = () => {
         }
     };
 
-};
 
 
+        return stage;
+
+    }
+}
+
+
+// window.onload = () => {
+
+//     var canvas = document.getElementById("app") as HTMLCanvasElement;
+//     var context2D = canvas.getContext("2d");
+//     var DEG = Math.PI / 180;
+
+    //     var m1 = new math.Matrix(2,Math.cos(30 * DEG),Math.sin);
+
+    //    // a c tx     x   ax + cy + tx
+    //    // b d ty  *  y = bx + dy + ty 
+    //    // 0 0 1      1        1
+
+    //    `
+    //    2 0 100
+    //    0 1 0
+    //    0 0 1 
+    //    `
+
+    // //    a.x = 100;
+    // //    a.scaleX = 2;
+
+    // let lastNow = Date.now();
+
+    // let frameHandler = () => {
+    //     console.log("111");
+
+    //     let now = Date.now();
+    //     let deltaTime = lastNow - now;
+    //     Ticker.getInstance().notify(deltaTime);
+    //     context2D.save();
+    //     context2D.setTransform(1, 0, 0, 1, 0, 0);
+    //     context2D.clearRect(0, 0, canvas.width, canvas.height);
+    //     //stage.updateMatrix();//3d引擎需要分开
+    //     stage.draw(context2D);
+    //     context2D.restore();
+    //     lastNow = now;
+    //     window.requestAnimationFrame(frameHandler);
+
+    // }
+    // window.requestAnimationFrame(frameHandler);
+
+    // let speed = 10;
+
+    // Ticker.getInstance().register((deltaTime) => {
+
+    // Button.transX = speed * deltaTime;
+
+    // // h = 1/2 * g * t * t;//Tween
+
+    // // s+=1;   //新手
+
+    // // v = g * deltaTime;
+    // // s= s0 + v *deltaTime; //入门
+
+    // // for(let i = 0;i<deltaTime/10;i++){  //切片
+    // //     doit(10);
+    // // }
+
+    // // function doit(deltaTime){
+    // //    v = g * deltaTime;
+    // // s= s0 + v *deltaTime;   
+    // // }
+
+    // });
+
+
+
+    // setInterval(() => {
+
+    //     context2D.save();
+
+    //     context2D.setTransform(1, 0, 0, 1, 0, 0);
+
+    //     context2D.clearRect(0, 0, canvas.width, canvas.height);
+
+    //     stage.draw(context2D);
+    //     context2D.restore();
+
+    // }, 60)

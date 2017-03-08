@@ -1,28 +1,30 @@
+namespace engine {
 
-type Ticker_listener_Type = (deltaTime:number) => void;
+   export type Ticker_listener_Type = (deltaTime: number) => void;
 
-class Ticker {
-    static instance:Ticker;
+  export  class Ticker {
+        static instance: Ticker;
 
-    static getInstance(){
-        if(!Ticker.instance){
-            Ticker.instance = new Ticker();
-        }else{
+        static getInstance() {
+            if (!Ticker.instance) {
+                Ticker.instance = new Ticker();
+            }
             return Ticker.instance;
         }
-    }
 
-    listeners: Ticker_listener_Type[] = [];
+        listeners: Ticker_listener_Type[] = [];
 
-    register(listener: (deltaTime:number) => void) {
-        this.listeners.push(listener);
-    }
-    unregister(listener: (deltaTime:number) => void){
-        
-    }
-    notify(deltaTime: number) {
-        for (let listener of this.listeners) {
-            listener(deltaTime);
+        register(listener: (deltaTime: number) => void) {
+            this.listeners.push(listener);
+        }
+
+        unregister(listener: (deltaTime: number) => void) {
+
+        }
+        notify(deltaTime: number) {
+            for (let listener of this.listeners) {
+                listener(deltaTime);
+            }
         }
     }
 }
