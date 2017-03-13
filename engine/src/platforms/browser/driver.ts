@@ -55,10 +55,8 @@ namespace engine {
                 let currentTarget = result.parent;
                 let E = { type, target, currentTarget,e }
                 list[i].dispatchEvent(E);
-              
-            }
 
-
+            } 
         }
     };
 

@@ -1,20 +1,20 @@
 class TouchEventService {
 
-    private static instance:TouchEventService;
+    private static instance: TouchEventService;
     private static count = 0;
 
     _touchStatus: boolean = false;
 
-     eventList: MouseEvent[] = [];
-     displayObjectList: engine.DisplayObject[] = [];
-    
+    eventList: MouseEvent[] = [];
+    displayObjectList: engine.DisplayObject[] = [];
 
-    currentX:number;
-    currentY:number;
-    endX:number;
-    endY:number;
 
-    isMove=false;
+    currentX: number;
+    currentY: number;
+    endX: number;
+    endY: number;
+
+    isMove = false;
 
     constructor() {
         TouchEventService.count++;
@@ -29,35 +29,25 @@ class TouchEventService {
         return TouchEventService.instance;
     }
 
-    public getDispalyObjectListFromMAOPAO(child:engine.DisplayObject){
-             if(child){
-                 this.displayObjectList.push(child);
-                 this.getDispalyObjectListFromMAOPAO(child.parent);
-             }
+    public getDispalyObjectListFromMAOPAO(child: engine.DisplayObject) {
+        if (child) {
+            this.displayObjectList.push(child);
+            this.getDispalyObjectListFromMAOPAO(child.parent);
+        }
     }
 
-    public getDispalyObjectListFromBUHUO(parent:engine.DisplayObject){
-             if(parent){
-                 this.displayObjectList.push(parent);
-                 if(parent.children){
-                 for(var i=0;i<parent.children.length;i++){
-                 this.getDispalyObjectListFromBUHUO(parent.children[i]);
-                 }
-                 }
-             }
+    public getDispalyObjectListFromBUHUO(parent: engine.DisplayObject) {
+        if (parent) {
+            this.displayObjectList.push(parent);
+            if (parent.children) {
+                for (var i = 0; i < parent.children.length; i++) {
+                    this.getDispalyObjectListFromBUHUO(parent.children[i]);
+                }
+            }
+        }
     }
 
 }
-
-enum ErrorCode {
-
-    SUCCESS,
-    MISSING_TASK,
-    REPEAT_OBSERVER
-
-}
-
-
 // function preOrder(node){
 //              if(node){
 //                  arr.push(node);
@@ -66,24 +56,33 @@ enum ErrorCode {
 //              }
 //          }
 namespace engine {
-export class TouchListener {
+    export class TouchListener {
 
-    type: string;
-    func: Function;
-    capture = false;
+        type: string;
+        func: Function;
+        capture = false;
 
-    constructor(type: string, func: Function, useCapture?: boolean) {
-        this.type = type;
-        this.func = func;
-        this.capture = useCapture || false;
+        constructor(type: string, func: Function, useCapture?: boolean) {
+            this.type = type;
+            this.func = func;
+            this.capture = useCapture || false;
+        }
     }
-}
 
 
-export enum TouchType {
-    MOUSEDOWN = 0,
-    MOUSEUP = 1,
-    CLICK = 2,
-    MOUSEMOVE = 3
-}
+    export class TouchEvent {
+
+
+        static TOUCH_MOVE: "touchMove";
+
+        static TOUCH_BEGIN: "touchBegin";
+
+        static TOUCH_END: "mouseup";
+
+        static TOUCH_CANCEL: "touchCancel";
+
+        static TOUCH_TAP: "mousedown";
+
+    }
+
 }
