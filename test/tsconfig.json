@@ -1,13 +1,14 @@
 {
 	"compilerOptions": {
 		"target": "es5",
-		"module": "commonjs",
+		// "module": "commonjs",
 		//"watch": true,
 		//"sourceMap": true,
-		"outDir": "./out"
+	   "out": "./test/out/test.js"
 	},
 	"include": [
-		"src/**/*.ts",
-		"../engine/out/**/*.d.ts"
+		
+		"../engine/out/**/*.d.ts",
+		"src/**/*.ts"
 	]
 }

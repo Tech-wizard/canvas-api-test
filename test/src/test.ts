@@ -82,4 +82,5 @@ GameScene.replaceScene(scene);
 GameScene.getCurrentScene().stage = stage;
 var pickscene = new UIScene();
 UIScene.replaceScene(pickscene);
-UIScene.getCurrentScene().gameMenu();
+//UIScene.getCurrentScene().gameMenu();
+UIScene.getCurrentScene().showPick();

@@ -221,8 +221,8 @@ class DialoguePanel extends engine.DisplayObjectContainer {
         this.button = new Button("close_png");
         this.textField.x = 80;
         this.textField.y = 500;
-        this.button.width = 40;
-        this.button.height = 40;
+        this.button.body.width = 40;
+        this.button.body.height = 40;
         this.button.x = 500;
         this.button.y = 550;
         this.button.touchEnabled = true;

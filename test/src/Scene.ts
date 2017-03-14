@@ -91,8 +91,8 @@ class GameScene {
                 // }
                 if (playerX == current.x && playerY == current.y) {
                     engine.Ticker.getInstance().unregister(this.ticker);
-                    var tween = engine.Tween.get(GameScene.getCurrentScene().player._body);
-                    tween.to({ x: current.x * TileMap.TILE_SIZE, y: current.y * TileMap.TILE_SIZE }, 100);
+                    // var tween = engine.Tween.get(GameScene.getCurrentScene().player._body);
+                    // tween.to({ x: current.x * TileMap.TILE_SIZE, y: current.y * TileMap.TILE_SIZE }, 100);
                     engine.Ticker.getInstance().register(this.ticker);
                     // GameScene.getCurrentScene().player._body.x = current.x * TileMap.TILE_SIZE;
                     // GameScene.getCurrentScene().player._body.y = current.y * TileMap.TILE_SIZE;
@@ -166,8 +166,8 @@ class UIScene {
         BlackMask.graphics.beginFill(0x000000, 1);
         BlackMask.graphics.drawRect(0, 0, stageW, stageH);
         BlackMask.graphics.endFill();
-        BlackMask.width = stageW;
-        BlackMask.height = stageH;
+        BlackMask.graphics.width = stageW;
+        BlackMask.graphics.height = stageH;
         GameScene.getCurrentScene().stage.addChild(BlackMask);
 
         //   UIScene.getCurrentScene().hero = SetTriangle();
@@ -178,13 +178,13 @@ class UIScene {
         WhiteMask.graphics.beginFill(0xFFFFFF, 1);
         WhiteMask.graphics.drawRect(0, 0, stageW, stageH);
         WhiteMask.graphics.endFill();
-        WhiteMask.width = stageW;
-        WhiteMask.height = stageH;
+        WhiteMask.graphics.width = stageW;
+        WhiteMask.graphics.height = stageH;
         // //this.addChild(WhiteMask);
         // //WhiteMask.alpha = 0;
 
         var back: engine.Bitmap = new engine.Bitmap();
-        back.src = "menu_jpg";
+        back.src = "menu.jpg";
         GameScene.getCurrentScene().stage.addChild(back);
         var stageW: number = 640;
         var stageH: number = 1136;
@@ -240,12 +240,12 @@ class UIScene {
         material.y = 850;
         GameScene.getCurrentScene().stage.addChild(material);
 
-        material.touchEnabled = true;
-        material.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
-            var p = new PageContainer();
-            GameScene.getCurrentScene().stage.removeall();
-            GameScene.getCurrentScene().stage.addChild(p);
-        })
+        // material.touchEnabled = true;
+        // material.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+        //     var p = new PageContainer();
+        //     GameScene.getCurrentScene().stage.removeAll();
+        //     GameScene.getCurrentScene().stage.addChild(p);
+        // })
 
 
         var about = new engine.TextField();
@@ -260,7 +260,7 @@ class UIScene {
         GameScene.getCurrentScene().stage.addChild(about);
         about.touchEnabled = true;
         about.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
-            GameScene.getCurrentScene().stage.removeall();
+            GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameabout();
         });
 
@@ -424,7 +424,7 @@ class UIScene {
         back.x = 300;
         GameScene.getCurrentScene().stage.addChild(back);
         back.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
-            GameScene.getCurrentScene().stage.removeall();
+            GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameMenu();
         });
 
@@ -543,7 +543,7 @@ class UIScene {
         setTimeout(() => {
             if (task_1.status == TaskStatus.SUBMITED) {
 
-                GameScene.getCurrentScene().stage.removeall();
+                GameScene.getCurrentScene().stage.removeAll();
                 UIScene.getCurrentScene().gamebadend();
             }
 
@@ -559,8 +559,8 @@ class UIScene {
         BlackMask.graphics.beginFill(0x000000, 1);
         BlackMask.graphics.drawRect(0, 0, stageW, stageH);
         BlackMask.graphics.endFill();
-        BlackMask.width = stageW;
-        BlackMask.height = stageH;
+        BlackMask.graphics.width = stageW;
+        BlackMask.graphics.height = stageH;
         GameScene.getCurrentScene().stage.addChild(BlackMask);
 
         var equipmentButtun = new engine.TextField();
@@ -608,7 +608,7 @@ class UIScene {
         back.x = 250;
         GameScene.getCurrentScene().stage.addChild(back);
         back.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
-            GameScene.getCurrentScene().stage.removeall();
+            GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameMenu();
         });
     }
@@ -619,8 +619,8 @@ class UIScene {
         blackback.graphics.beginFill(0x000000, 1);
         blackback.graphics.drawRect(0, 0, 640, 1134);
         blackback.graphics.endFill();
-        blackback.width = 640;
-        blackback.height = 1134;
+        blackback.graphics.width = 640;
+        blackback.graphics.height = 1134;
         GameScene.getCurrentScene().stage.addChild(blackback);
 
         var win = new engine.TextField();
@@ -642,7 +642,7 @@ class UIScene {
         back.x = 250;
         GameScene.getCurrentScene().stage.addChild(back);
         back.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
-            GameScene.getCurrentScene().stage.removeall();
+            GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameMenu();
         });
 
@@ -654,7 +654,7 @@ class UIScene {
         bcontinue.x = 250;
         GameScene.getCurrentScene().stage.addChild(bcontinue);
         bcontinue.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
-            GameScene.getCurrentScene().stage.removeall();
+            GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameContinue();
         });
     }

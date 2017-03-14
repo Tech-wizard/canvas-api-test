@@ -88,7 +88,7 @@ class Player extends engine.DisplayObjectContainer {
 
             this._body.src = list[Math.floor(count)];
 
-        };
+        });
 
 
 

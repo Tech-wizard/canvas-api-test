@@ -44,7 +44,7 @@ class FightCommand implements Command {
         console.log(UIScene.getCurrentScene().hero);
         var battle = new Battle(UIScene.getCurrentScene().hero, 1, this.enemyad, 6, 6);
         if (GameScene.getCurrentScene().stage.children.length != 0)
-        { GameScene.getCurrentScene().stage.removeall(); }
+        { GameScene.getCurrentScene().stage.removeAll(); }
         GameScene.getCurrentScene().stage.addChild(battle);
 
         // engine.setTimeout(() => {
@@ -64,7 +64,7 @@ class FightCommand implements Command {
 
                 callback();
 
-                GameScene.getCurrentScene().stage.removeall();
+                GameScene.getCurrentScene().stage.removeAll();
                 clearInterval(batteEnd);
                 if (this.enemyad == "npc_2_png") {
 
@@ -79,7 +79,7 @@ class FightCommand implements Command {
             if (battle.judgeHeroDeath() == true) {
                 console.log("英雄阵亡，结束战斗");
                 callback();
-                GameScene.getCurrentScene().stage.removeall();
+                GameScene.getCurrentScene().stage.removeAll();
                 clearInterval(batteEnd);
                 UIScene.getCurrentScene().gamebadend();
             }

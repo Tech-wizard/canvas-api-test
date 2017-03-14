@@ -52,8 +52,8 @@ class Battle extends engine.DisplayObjectContainer {
         BattleMask.graphics.beginFill(0x000000, 1);
         BattleMask.graphics.drawRect(0, 0, 640, 1136);
         BattleMask.graphics.endFill();
-        BattleMask.width = 640;
-        BattleMask.height = 1136;
+        BattleMask.graphics.width = 640;
+        BattleMask.graphics.height = 1136;
         this.addChild(BattleMask);
 
         this.hero = hero;
@@ -102,10 +102,10 @@ class Battle extends engine.DisplayObjectContainer {
                 this.addChild(this._block[i][j]);
                 this._block[i][j].touchEnabled = true;
                 this._blockType[i][j] = BlockType.notmove;
-                this._block[i][j].addEventListener(engine.TouchEvent.TOUCH_TAP, (e: engine.TouchEvent) => {
+                this._block[i][j].addEventListener(engine.TouchEvent.TOUCH_TAP, (e: MouseEvent) => {
                     // console.log(e.target);
                     // console.log(e.target.i, e.target.j);
-                    this.heroTouchMove(e.target.i, e.target.j);
+                    //this.heroTouchMove(e.target.i, e.target.j);
                 });
             }
         }
@@ -139,11 +139,11 @@ class Battle extends engine.DisplayObjectContainer {
         //engine.setInterval(()=>{this.randommove(this.heropos)},this,2000);
         //engine.setInterval(() => { this.enemyturn() }, this, 3000);
 
-        this.heroSkills[0].addEventListener(engine.TouchEvent.TOUCH_TAP, () => { this.heroAttack(this.hero.skills[0]) }, this);
-        this.heroSkills[1].addEventListener(engine.TouchEvent.TOUCH_TAP, () => { this.heroAttack(this.hero.skills[1]) }, this);
-        this.heroSkills[2].addEventListener(engine.TouchEvent.TOUCH_TAP, () => { this.heroSpecial(this.hero.skills[2]) }, this);
-        this.heroSkills[3].addEventListener(engine.TouchEvent.TOUCH_TAP, () => { this.heroBuff(this.hero.skills[3]) }, this);
-        this.heroSkills[4].addEventListener(engine.TouchEvent.TOUCH_TAP, this.heroMove, this);
+        this.heroSkills[0].addEventListener(engine.TouchEvent.TOUCH_TAP, () => { this.heroAttack(this.hero.skills[0]) });
+        this.heroSkills[1].addEventListener(engine.TouchEvent.TOUCH_TAP, () => { this.heroAttack(this.hero.skills[1]) });
+        this.heroSkills[2].addEventListener(engine.TouchEvent.TOUCH_TAP, () => { this.heroSpecial(this.hero.skills[2]) });
+        this.heroSkills[3].addEventListener(engine.TouchEvent.TOUCH_TAP, () => { this.heroBuff(this.hero.skills[3]) });
+        this.heroSkills[4].addEventListener(engine.TouchEvent.TOUCH_TAP, this.heroMove);
         this.heroTurnEnd();
     }
 

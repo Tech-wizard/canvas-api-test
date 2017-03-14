@@ -234,6 +234,10 @@ namespace engine {
 
         size: string = "36";
 
+        width;
+
+        height;
+
         _measureTextWidth = 0;
 
         constructor() {
@@ -351,17 +355,19 @@ namespace engine {
     export class Graphics extends DisplayObject {
 
         fillColor = "#000000";
-        alpha = 1;
-        globalAlpha = 1;
         strokeColor = "#000000";
         lineWidth = 1;
         lineColor = "#000000";
         width;
         height;
+        transX;
+        transY;
 
         render(context2D: CanvasRenderingContext2D) {
 
-            context2D.fillRect(0, 0, this.width, this.height);
+            context2D.globalAlpha = this.alpha;
+            context2D.fillStyle = this.fillColor;
+            context2D.fillRect(this.transX, this.transY, this.width, this.height);
             context2D.fill();
         }
 
@@ -397,30 +403,12 @@ namespace engine {
         }
 
 
-        drawRect(x1, y1, x2, y2, context2D: CanvasRenderingContext2D) {
-            context2D.globalAlpha = this.alpha;
-            context2D.fillStyle = this.fillColor;
+        drawRect(x1, y1, x2, y2) {
+            this.transX = x1;
+            this.transY = y1;
             this.width = x2;
             this.height = y2;
         }
-
-        // drawCircle(x, y, rad, context2D: CanvasRenderingContext2D) {
-        //     context2D.fillStyle = this.fillColor;
-        //     context2D.globalAlpha = this.alpha;
-        //     context2D.beginPath();
-        //     context2D.arc(x, y, rad, 0, Math.PI * 2, true);
-        //     context2D.closePath();
-        //     context2D.fill();
-        // }
-
-        // drawArc(x, y, rad, beginAngle, endAngle, context2D: CanvasRenderingContext2D) {
-        //     context2D.strokeStyle = this.strokeColor;
-        //     context2D.globalAlpha = this.alpha;
-        //     context2D.beginPath();
-        //     context2D.arc(x, y, rad, beginAngle, endAngle, true);
-        //     context2D.closePath();
-        //     context2D.stroke();
-        // }
 
     }
 

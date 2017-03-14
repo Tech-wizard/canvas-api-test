@@ -8,10 +8,10 @@
 		"declaration": true
 	},
 	"files": [
+		"src/displaylist.ts",
 		"src/math.ts",
 		"src/EventService.ts",
 		"src/Ticker.ts",
-		"src/platforms/browser/driver.ts",
-		"src/displaylist.ts"
+		"src/platforms/browser/driver.ts"
 	]
 }
