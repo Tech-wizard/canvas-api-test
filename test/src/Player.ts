@@ -1,6 +1,6 @@
 
 class Player extends engine.DisplayObjectContainer {
-    _main: Main;
+   // _main: Main;
     //_PA: PlayAnimation;
     _label: engine.TextField;
     _stateMachine: StateMachine;

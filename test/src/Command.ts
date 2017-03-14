@@ -32,7 +32,7 @@ class FightCommand implements Command {
 
     private _hasBeenCancelled = false;
     enemyad: string;
-    main: Main;
+    main: engine.DisplayObjectContainer;
     constructor(ad: string) {
         this.enemyad = ad;
 
