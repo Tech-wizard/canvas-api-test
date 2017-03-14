@@ -115,7 +115,7 @@ namespace engine {
 
         draw(context2D: CanvasRenderingContext2D) {  //应有final
 
-            context2D.save();
+            // context2D.save();
 
             if (this.parent) {
 
@@ -212,7 +212,7 @@ namespace engine {
 
             rect.height = this.image.height;
             let result = rect.isPointInReactangle(new engine.Point(x, y));
-            console.log("bitmap", rect.height, rect.width, x, y);
+            //console.log("bitmap", rect.height, rect.width, x, y);
 
             if (result) {
                 return this;
@@ -234,6 +234,8 @@ namespace engine {
 
         size: string = "36";
 
+        fillColor = "#FFFFFF";
+
         width;
 
         height;
@@ -247,6 +249,10 @@ namespace engine {
         render(context2D: CanvasRenderingContext2D) {
 
             context2D.font = this.size + "px " + this.font;
+
+            context2D.globalAlpha = this.alpha;
+
+            context2D.fillStyle = this.fillColor;
 
             context2D.fillText(this.text, 0, parseInt(this.size));
 
@@ -265,7 +271,7 @@ namespace engine {
             let point = new engine.Point(x, y);
 
             //return rect.isPointInReactangle(point) ? this : null;
-            console.log("tf", rect.height, rect.width, x, y);
+            //console.log("tf", rect.height, rect.width, x, y);
             if (rect.isPointInReactangle(point)) {
                 return this;
             }
@@ -321,7 +327,7 @@ namespace engine {
                 let child = this.children[i];
                 //child.localMatrix * point;
                 let point = new engine.Point(x, y);
-                console.log(x, y);
+                //console.log(x, y);
                 let invertChildLocalMatrix = engine.invertMatrix(child.localMatrix);
                 let pointBaseOnChild = engine.pointAppendMatrix(point, invertChildLocalMatrix);
                 let HitTestResult = child.hitTest(pointBaseOnChild.x, pointBaseOnChild.y);
@@ -365,10 +371,10 @@ namespace engine {
 
         render(context2D: CanvasRenderingContext2D) {
 
-            context2D.globalAlpha = this.alpha;
+            // context2D.globalAlpha = this.alpha;
             context2D.fillStyle = this.fillColor;
             context2D.fillRect(this.transX, this.transY, this.width, this.height);
-            context2D.fill();
+            //context2D.fill();
         }
 
         hitTest(x: number, y: number) {
@@ -378,6 +384,7 @@ namespace engine {
             rect.width = this.width;
 
             rect.height = this.height;
+            
             let result = rect.isPointInReactangle(new engine.Point(x, y));
             //console.log("bitmap", rect.height, rect.width, x, y);
 
@@ -390,16 +397,13 @@ namespace engine {
 
         }
 
-        beginFill(color, alpha) {
+        beginFill(color:string, alpha) {
             this.fillColor = color;
             this.alpha = alpha;
         }
 
         endFill() {
-
-            this.fillColor = "#000000";
-            this.alpha = 1;
-
+           //context2D.fill();
         }
 
 

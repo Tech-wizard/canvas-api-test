@@ -56,7 +56,7 @@ class PropertyPanel extends engine.DisplayObjectContainer {
         super();
         this.body = new engine.Shape();
         this.body.touchEnabled = true;
-        this.body.graphics.beginFill(0x000000, 0.6);
+        this.body.graphics.beginFill("#000000", 0.6);
         this.body.graphics.drawRect(0, 0, 640, 400);
         this.body.graphics.endFill();
         this.closeButton = new Button("close_png");
@@ -150,7 +150,7 @@ class PropertyPanel extends engine.DisplayObjectContainer {
         this.weaponflag = true;
         this.weaponbody = new engine.Shape();
         this.weaponbody.touchEnabled = true;
-        this.weaponbody.graphics.beginFill(0x000000, 0.5);
+        this.weaponbody.graphics.beginFill("#000000", 0.5);
         this.weaponbody.graphics.drawRect(0, 0, 300, 240);
         this.weaponbody.graphics.endFill();
 

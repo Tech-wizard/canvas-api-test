@@ -49,7 +49,7 @@ class Battle extends engine.DisplayObjectContainer {
         super();
 
         var BattleMask = new engine.Shape();
-        BattleMask.graphics.beginFill(0x000000, 1);
+        BattleMask.graphics.beginFill("#000000", 1);
         BattleMask.graphics.drawRect(0, 0, 640, 1136);
         BattleMask.graphics.endFill();
         BattleMask.graphics.width = 640;
@@ -105,7 +105,8 @@ class Battle extends engine.DisplayObjectContainer {
                 this._block[i][j].addEventListener(engine.TouchEvent.TOUCH_TAP, (e: MouseEvent) => {
                     // console.log(e.target);
                     // console.log(e.target.i, e.target.j);
-                    //this.heroTouchMove(e.target.i, e.target.j);
+                    let target = e.target as any as engine.Bitmap;
+                    this.heroTouchMove(target['i'], target['j']);
                 });
             }
         }

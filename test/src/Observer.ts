@@ -27,7 +27,7 @@ class Item extends engine.DisplayObjectContainer implements Observer {
         this.y = y;
         this.addChild(this._body);
         this.touchEnabled = true;
-        this.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+        this.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
             this.onItemClick();
         });
 
@@ -115,7 +115,7 @@ class NPC extends engine.DisplayObjectContainer implements Observer {
         }
     }
 
-    onNPCClick() {
+    onNPCClick(e:MouseEvent) {
          TaskService.getInstance().accept();
         if (SceneService.getInstance().list, length != 0) {
             SceneService.getInstance().list.cancel();
@@ -141,7 +141,7 @@ class TaskPanel extends engine.DisplayObjectContainer implements Observer {
         this.x = x;
         this.y = y;
         this.body = new engine.Shape();
-        this.body.graphics.beginFill(0x000000, 0.4);
+        this.body.graphics.beginFill("#000000", 0.4);
         this.body.graphics.drawRect(0, 0, 600, 100);
         this.body.graphics.endFill();
 
@@ -212,7 +212,7 @@ class DialoguePanel extends engine.DisplayObjectContainer {
         super();
 
         this.body = new engine.Shape();
-        this.body.graphics.beginFill(0x000000, 0.7);
+        this.body.graphics.beginFill("#000000", 0.7);
         this.body.graphics.drawRect(0, 0, 600, 172);
         this.body.graphics.endFill();
         this.body.y = 450;
@@ -261,7 +261,7 @@ class DialoguePanel extends engine.DisplayObjectContainer {
 
     }
 
-    onButtonClick() {
+    onButtonClick(e:MouseEvent) {
 
         this.disshowDpanel();
         switch (this.currentTask.status) {
@@ -351,7 +351,7 @@ class Monster extends engine.DisplayObjectContainer implements Observer {
         });
     }
 
-    onButtonClick() {
+    onButtonClick(e:MouseEvent) {
 
         if (SceneService.getInstance().list, length != 0) {
             SceneService.getInstance().list.cancel();

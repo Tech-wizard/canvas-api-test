@@ -1087,7 +1087,7 @@ var Item = (function (_super) {
         _this.y = y;
         _this.addChild(_this._body);
         _this.touchEnabled = true;
-        _this.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        _this.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
             _this.onItemClick();
         });
         return _this;
@@ -1156,7 +1156,7 @@ var NPC = (function (_super) {
             this._emoji.alpha = 0;
         }
     };
-    NPC.prototype.onNPCClick = function () {
+    NPC.prototype.onNPCClick = function (e) {
         TaskService.getInstance().accept();
         if (SceneService.getInstance().list, length != 0) {
             SceneService.getInstance().list.cancel();
@@ -1175,7 +1175,7 @@ var TaskPanel = (function (_super) {
         _this.x = x;
         _this.y = y;
         _this.body = new engine.Shape();
-        _this.body.graphics.beginFill(0x000000, 0.4);
+        _this.body.graphics.beginFill("#000000", 0.4);
         _this.body.graphics.drawRect(0, 0, 600, 100);
         _this.body.graphics.endFill();
         _this.textField = new engine.TextField();
@@ -1229,7 +1229,7 @@ var DialoguePanel = (function (_super) {
     function DialoguePanel(talk) {
         var _this = _super.call(this) || this;
         _this.body = new engine.Shape();
-        _this.body.graphics.beginFill(0x000000, 0.7);
+        _this.body.graphics.beginFill("#000000", 0.7);
         _this.body.graphics.drawRect(0, 0, 600, 172);
         _this.body.graphics.endFill();
         _this.body.y = 450;
@@ -1266,7 +1266,7 @@ var DialoguePanel = (function (_super) {
         this.removeChild(this.button);
         this.removeChild(this.textField);
     };
-    DialoguePanel.prototype.onButtonClick = function () {
+    DialoguePanel.prototype.onButtonClick = function (e) {
         this.disshowDpanel();
         switch (this.currentTask.status) {
             case TaskStatus.ACCEPTABLE:
@@ -1338,7 +1338,7 @@ var Monster = (function (_super) {
         });
         return _this;
     }
-    Monster.prototype.onButtonClick = function () {
+    Monster.prototype.onButtonClick = function (e) {
         if (SceneService.getInstance().list, length != 0) {
             SceneService.getInstance().list.cancel();
         }
@@ -1595,7 +1595,7 @@ var PropertyPanel = (function (_super) {
         _this.tfweaponATK = new engine.TextField();
         _this.body = new engine.Shape();
         _this.body.touchEnabled = true;
-        _this.body.graphics.beginFill(0x000000, 0.6);
+        _this.body.graphics.beginFill("#000000", 0.6);
         _this.body.graphics.drawRect(0, 0, 640, 400);
         _this.body.graphics.endFill();
         _this.closeButton = new Button("close_png");
@@ -1678,7 +1678,7 @@ var PropertyPanel = (function (_super) {
         this.weaponflag = true;
         this.weaponbody = new engine.Shape();
         this.weaponbody.touchEnabled = true;
-        this.weaponbody.graphics.beginFill(0x000000, 0.5);
+        this.weaponbody.graphics.beginFill("#000000", 0.5);
         this.weaponbody.graphics.drawRect(0, 0, 300, 240);
         this.weaponbody.graphics.endFill();
         this.addChild(this.weaponbody);
@@ -2060,7 +2060,7 @@ var UIScene = (function () {
         var stageW = 640;
         var stageH = 1136;
         var BlackMask = new engine.Shape();
-        BlackMask.graphics.beginFill(0x000000, 1);
+        BlackMask.graphics.beginFill("#000000", 1);
         BlackMask.graphics.drawRect(0, 0, stageW, stageH);
         BlackMask.graphics.endFill();
         BlackMask.graphics.width = stageW;
@@ -2070,7 +2070,7 @@ var UIScene = (function () {
         //   var battle = new Battle(UIScene.getCurrentScene().hero,1,"npc_2_png",6,6);
         //  GameScene.getCurrentScene().main.addChild(battle);
         var WhiteMask = new engine.Shape();
-        WhiteMask.graphics.beginFill(0xFFFFFF, 1);
+        WhiteMask.graphics.beginFill("#FFFFFF", 1);
         WhiteMask.graphics.drawRect(0, 0, stageW, stageH);
         WhiteMask.graphics.endFill();
         WhiteMask.graphics.width = stageW;
@@ -2099,7 +2099,7 @@ var UIScene = (function () {
             }
         });
         var Title = new engine.TextField();
-        //Title.textColor = 0xffffff;
+        //Title.textColor = #ffffff;
         //Title.width = stageW - 172;
         // Title.textAlign = "center";
         Title.text = "二维位面之纯形争霸";
@@ -2109,7 +2109,7 @@ var UIScene = (function () {
         Title.y = 100;
         GameScene.getCurrentScene().stage.addChild(Title);
         var start = new engine.TextField();
-        // start.textColor = 0xffffff;
+        // start.textColor = #ffffff;
         // start.width = stageW - 172;
         // start.textAlign = "center";
         start.text = "开始游戏";
@@ -2119,7 +2119,7 @@ var UIScene = (function () {
         start.y = 800;
         GameScene.getCurrentScene().stage.addChild(start);
         var material = new engine.TextField();
-        // material.textColor = 0xffffff;
+        // material.textColor = #ffffff;
         // material.width = stageW - 172;
         // material.textAlign = "center";
         material.text = "背景资料";
@@ -2135,7 +2135,7 @@ var UIScene = (function () {
         //     GameScene.getCurrentScene().stage.addChild(p);
         // })
         var about = new engine.TextField();
-        // about.textColor = 0xffffff;
+        // about.textColor = #ffffff;
         // about.width = stageW - 172;
         // about.textAlign = "center";
         about.text = "游戏理念";
@@ -2145,12 +2145,13 @@ var UIScene = (function () {
         about.y = 900;
         GameScene.getCurrentScene().stage.addChild(about);
         about.touchEnabled = true;
-        about.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        about.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameabout();
         });
         start.touchEnabled = true;
-        start.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        start.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
+            console.log(11111);
             GameScene.getCurrentScene().stage.removeChild(start);
             GameScene.getCurrentScene().stage.removeChild(material);
             GameScene.getCurrentScene().stage.removeChild(about);
@@ -2162,7 +2163,7 @@ var UIScene = (function () {
     UIScene.prototype.showPick = function () {
         var _this = this;
         var pick = new engine.TextField();
-        // pick.textColor = 0xffffff;
+        // pick.textColor = #ffffff;
         // pick.width = 640 - 172;
         // pick.textAlign = "center";
         pick.text = "选择进入一名纯形战士视角";
@@ -2172,7 +2173,7 @@ var UIScene = (function () {
         pick.y = 400;
         GameScene.getCurrentScene().stage.addChild(pick);
         var sanjiao = new engine.TextField();
-        // sanjiao.textColor = 0xffffff;
+        // sanjiao.textColor = #ffffff;
         // sanjiao.width = 640 - 172;
         // sanjiao.textAlign = "center";
         sanjiao.text = "▲三角（善于迂回和远程输出）";
@@ -2182,7 +2183,7 @@ var UIScene = (function () {
         sanjiao.y = 600;
         GameScene.getCurrentScene().stage.addChild(sanjiao);
         sanjiao.touchEnabled = true;
-        sanjiao.addEventListener(engine.TouchEvent.TOUCH_BEGIN, function () {
+        sanjiao.addEventListener(engine.TouchEvent.TOUCH_BEGIN, function (e) {
             _this.ad = "sanjiao_png";
             switch (_this.ad) {
                 case "sanjiao_png":
@@ -2203,7 +2204,7 @@ var UIScene = (function () {
             _this.gamestart();
         });
         var fangkuai = new engine.TextField();
-        // fangkuai.textColor = 0xffffff;
+        // fangkuai.textColor = #ffffff;
         // fangkuai.width = 640 - 172;
         // fangkuai.textAlign = "center";
         fangkuai.text = "■方块（侵略性强并善于近战）";
@@ -2213,7 +2214,7 @@ var UIScene = (function () {
         fangkuai.y = 650;
         GameScene.getCurrentScene().stage.addChild(fangkuai);
         fangkuai.touchEnabled = true;
-        fangkuai.addEventListener(engine.TouchEvent.TOUCH_BEGIN, function () {
+        fangkuai.addEventListener(engine.TouchEvent.TOUCH_BEGIN, function (e) {
             _this.ad = "fangkuai_png";
             switch (_this.ad) {
                 case "sanjiao_png":
@@ -2234,7 +2235,7 @@ var UIScene = (function () {
             _this.gamestart();
         });
         var zhengyuan = new engine.TextField();
-        // zhengyuan.textColor = 0xffffff;
+        // zhengyuan.textColor = #ffffff;
         // zhengyuan.width = 640 - 172;
         // zhengyuan.textAlign = "center";
         zhengyuan.text = "●正圆（兼具灵活性和消耗战）";
@@ -2244,7 +2245,7 @@ var UIScene = (function () {
         zhengyuan.y = 700;
         GameScene.getCurrentScene().stage.addChild(zhengyuan);
         zhengyuan.touchEnabled = true;
-        zhengyuan.addEventListener(engine.TouchEvent.TOUCH_BEGIN, function () {
+        zhengyuan.addEventListener(engine.TouchEvent.TOUCH_BEGIN, function (e) {
             _this.ad = "zhengyuan_png";
             switch (_this.ad) {
                 case "sanjiao_png":
@@ -2268,7 +2269,7 @@ var UIScene = (function () {
     UIScene.prototype.gameabout = function () {
         var rect = new engine.Shape();
         var textField = new engine.TextField();
-        rect.graphics.beginFill(0x000000, 1);
+        rect.graphics.beginFill("#000000", 1);
         rect.graphics.drawRect(0, 0, 640, 1136);
         rect.graphics.endFill();
         GameScene.getCurrentScene().stage.addChild(rect);
@@ -2285,7 +2286,7 @@ var UIScene = (function () {
         back.y = 900;
         back.x = 300;
         GameScene.getCurrentScene().stage.addChild(back);
-        back.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        back.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameMenu();
         });
@@ -2298,7 +2299,7 @@ var UIScene = (function () {
         equipmentButtun.y = 1000;
         GameScene.getCurrentScene().stage.addChild(equipmentButtun);
         equipmentButtun.touchEnabled = true;
-        equipmentButtun.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        equipmentButtun.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
             if (PropertyPanel.flag == 0) {
                 console.log(PropertyPanel.flag);
                 var pp = new PropertyPanel(UIScene.getCurrentScene().hero);
@@ -2387,7 +2388,7 @@ var UIScene = (function () {
         var stageW = 640;
         var stageH = 1136;
         var BlackMask = new engine.Shape();
-        BlackMask.graphics.beginFill(0x000000, 1);
+        BlackMask.graphics.beginFill("#000000", 1);
         BlackMask.graphics.drawRect(0, 0, stageW, stageH);
         BlackMask.graphics.endFill();
         BlackMask.graphics.width = stageW;
@@ -2400,7 +2401,7 @@ var UIScene = (function () {
         equipmentButtun.y = 1000;
         GameScene.getCurrentScene().stage.addChild(equipmentButtun);
         equipmentButtun.touchEnabled = true;
-        equipmentButtun.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        equipmentButtun.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
             if (PropertyPanel.flag == 0) {
                 console.log(PropertyPanel.flag);
                 var pp = new PropertyPanel(UIScene.getCurrentScene().hero);
@@ -2430,21 +2431,21 @@ var UIScene = (function () {
         back.y = 900;
         back.x = 250;
         GameScene.getCurrentScene().stage.addChild(back);
-        back.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        back.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameMenu();
         });
     };
     UIScene.prototype.gamehappyend = function () {
         var blackback = new engine.Shape();
-        blackback.graphics.beginFill(0x000000, 1);
+        blackback.graphics.beginFill("#000000", 1);
         blackback.graphics.drawRect(0, 0, 640, 1134);
         blackback.graphics.endFill();
         blackback.graphics.width = 640;
         blackback.graphics.height = 1134;
         GameScene.getCurrentScene().stage.addChild(blackback);
         var win = new engine.TextField();
-        // win.textColor = 0xffffff;
+        // win.textColor = #ffffff;
         // win.width = 640 - 172;
         // win.textAlign = "center";
         win.text = "纯形战士战胜了不规则几何体，但战斗仍将继续！";
@@ -2460,7 +2461,7 @@ var UIScene = (function () {
         back.y = 900;
         back.x = 250;
         GameScene.getCurrentScene().stage.addChild(back);
-        back.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        back.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameMenu();
         });
@@ -2471,7 +2472,7 @@ var UIScene = (function () {
         bcontinue.y = 800;
         bcontinue.x = 250;
         GameScene.getCurrentScene().stage.addChild(bcontinue);
-        bcontinue.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        bcontinue.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameContinue();
         });
@@ -2513,9 +2514,9 @@ var SkillConstructor = (function (_super) {
         tfname.text = data.name;
         _this.addChild(tfname);
         bitmap.touchEnabled = true;
-        bitmap.addEventListener(engine.TouchEvent.TOUCH_TAP, function () {
+        bitmap.addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
         });
-        bitmap.addEventListener(engine.TouchEvent.TOUCH_BEGIN, function () {
+        bitmap.addEventListener(engine.TouchEvent.TOUCH_BEGIN, function (e) {
         });
         return _this;
     }
@@ -3110,7 +3111,7 @@ var Battle = (function (_super) {
         _this.timerbar = new engine.TextField();
         _this.chance = 0; //该回合行动次数
         var BattleMask = new engine.Shape();
-        BattleMask.graphics.beginFill(0x000000, 1);
+        BattleMask.graphics.beginFill("#000000", 1);
         BattleMask.graphics.drawRect(0, 0, 640, 1136);
         BattleMask.graphics.endFill();
         BattleMask.graphics.width = 640;
@@ -3159,7 +3160,8 @@ var Battle = (function (_super) {
                 _this._block[i][j].addEventListener(engine.TouchEvent.TOUCH_TAP, function (e) {
                     // console.log(e.target);
                     // console.log(e.target.i, e.target.j);
-                    //this.heroTouchMove(e.target.i, e.target.j);
+                    var target = e.target;
+                    _this.heroTouchMove(target['i'], target['j']);
                 });
             }
         }

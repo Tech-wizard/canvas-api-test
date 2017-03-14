@@ -1,19 +1,17 @@
-
-//list 
-// |-itemRenderer
-//      |-- TextField
-//      |-- Button
 namespace engine {
 
- export let run = (canvas: HTMLCanvasElement) => {
+    export let run = (canvas: HTMLCanvasElement) => {
 
         var stage = new DisplayObjectContainer();
         let context2D = canvas.getContext("2d");
+        //let context2D = Factory.create();
         let lastNow = Date.now();
+        //let renderer = new canvasRender(stage,context2D);
         let frameHandler = () => {
             let now = Date.now();
             let deltaTime = now - lastNow;
             Ticker.getInstance().notify(deltaTime);
+            // context2D.setTransform(1,0,0,1,0,0)
             context2D.clearRect(0, 0, canvas.width, canvas.height);
             context2D.save();
             stage.draw(context2D);
@@ -23,130 +21,168 @@ namespace engine {
         }
 
         window.requestAnimationFrame(frameHandler);
-       
-    window.onmousedown = (e) => {
 
-        let x = e.offsetX - 3;
-        let y = e.offsetY - 3;
-      
-        let result = stage.hitTest(x, y);
-        let target = result;
+        window.onmousedown = (e) => {
 
-        let list = [];
-        list.push(result);
-        if (result && result.touchEnabled == true) {
+            let x = e.offsetX - 3;
+            let y = e.offsetY - 3;
 
-            while (result.parent) {
-                list.push(result.parent);
-                result = result.parent;
+            let result = stage.hitTest(x, y);
+            let target = result;
+
+            let list = [];
+            list.push(result);
+            if (result && result.touchEnabled == true) {
+
+                while (result.parent) {
+                    list.push(result.parent);
+                    result = result.parent;
+
+                }
+
+                for (let i = list.length - 1; i > 0; i--) {  //捕获在先
+                    let type = "mousedown";
+                    let currentTarget = result.parent;
+                    let E = { type, target, currentTarget, e }
+                    list[i].dispatchEvent(E);
+
+                }
+
+                for (let i = 0; i < list.length; i++) {  //冒泡在后
+                    let type = "mousedown";
+                    let currentTarget = result.parent;
+                    let E = { type, target, currentTarget, e }
+                    list[i].dispatchEvent(E);
+
+                }
+            }
+        };
+
+        window.onmouseup = (e) => {
+
+            let x = e.offsetX - 3;
+            let y = e.offsetY - 3;
+
+            let result = stage.hitTest(x, y);
+
+            let target = result;
+            let list = [];
+            list.push(result);
+
+            if (result && result.touchEnabled == true) {
+
+                while (result.parent) {
+                    list.push(result.parent);
+                    result = result.parent;
+                }
+
+                for (let i = list.length - 1; i > 0; i--) {  //捕获在先
+                    let type = "mouseup";
+                    let currentTarget = result.parent;
+                    let E = { type, target, currentTarget, e }
+                    list[i].dispatchEvent(E);
+                    //console.log(e);
+                }
+
+                for (let i = 0; i < list.length; i++) {  //冒泡在后
+                    let type = "mouseup";
+                    let currentTarget = result.parent;
+                    let E = { type, target, currentTarget, e }
+                    list[i].dispatchEvent(E);
+                    //console.log(e);
+                }
+
 
             }
 
-            for (let i = list.length - 1; i > 0; i--) {  //捕获在先
-                let type = "mousedown";
-                let currentTarget = result.parent;
-                let E = { type, target, currentTarget,e }
-                list[i].dispatchEvent(E);
-               
+        };
+
+
+        window.onmousemove = (e) => {
+
+
+            let x = e.offsetX - 3;
+            let y = e.offsetY - 3;
+
+            // TouchEventService.getInstance().currentX = x;
+            // TouchEventService.getInstance().currentY = y;
+
+            let result = stage.hitTest(x, y);
+
+            let target = result;
+            let list = [];
+            list.push(result);
+            if (result && result.touchEnabled == true) {
+
+                while (result.parent) {
+                    list.push(result.parent);
+                    result = result.parent;
+
+                }
+
+                for (let i = list.length - 1; i > 0; i--) {  //捕获在先
+                    let type = "mousemove";
+                    let currentTarget = result.parent;
+                    let E = { type, target, currentTarget, e }
+                    list[i].dispatchEvent(E);
+                    //console.log(e);
+                }
+
+                for (let i = 0; i < list.length; i++) {  //冒泡在后
+                    let type = "mousemove";
+                    let currentTarget = result.parent;
+                    let E = { type, target, currentTarget, e }
+                    list[i].dispatchEvent(E);
+                    //console.log(e);
+                }
             }
-
-            for (let i = 0; i < list.length; i++) {  //冒泡在后
-                let type = "mousedown";
-                let currentTarget = result.parent;
-                let E = { type, target, currentTarget,e }
-                list[i].dispatchEvent(E);
-
-            } 
-        }
-    };
-
-    window.onmouseup = (e) => {
-
-        let x = e.offsetX - 3;
-        let y = e.offsetY - 3;
-     
-        let result = stage.hitTest(x, y);
-
-        let target = result;
-        let list = [];
-        list.push(result);
-
-        if (result && result.touchEnabled == true) {
-
-            while (result.parent) {
-                list.push(result.parent);
-                result = result.parent;
-            }
-
-            for (let i = list.length - 1; i > 0; i--) {  //捕获在先
-                let type = "mouseup";
-                let currentTarget = result.parent;
-                let E = { type, target, currentTarget,e }
-                list[i].dispatchEvent(E);
-                //console.log(e);
-            }
-
-            for (let i = 0; i < list.length; i++) {  //冒泡在后
-                let type = "mouseup";
-                let currentTarget = result.parent;
-                let E = { type, target, currentTarget,e }
-                list[i].dispatchEvent(E);
-                //console.log(e);
-            }
-
-
-        }
-
-    };
-
-
-    window.onmousemove = (e) => {
-
-
-        let x = e.offsetX - 3;
-        let y = e.offsetY - 3;
-      
-        // TouchEventService.getInstance().currentX = x;
-        // TouchEventService.getInstance().currentY = y;
-
-        let result = stage.hitTest(x, y);
-
-        let target = result;
-        let list = [];
-        list.push(result);
-        if (result && result.touchEnabled == true) {
-
-            while (result.parent) {
-                list.push(result.parent);
-                result = result.parent;
-
-            }
-
-            for (let i = list.length - 1; i > 0; i--) {  //捕获在先
-                let type = "mousemove";
-                let currentTarget = result.parent;
-                let E = { type, target, currentTarget,e }
-                list[i].dispatchEvent(E);
-                //console.log(e);
-            }
-
-            for (let i = 0; i < list.length; i++) {  //冒泡在后
-                let type = "mousemove";
-                let currentTarget = result.parent;
-                let E = { type, target, currentTarget,e }
-                list[i].dispatchEvent(E);
-                //console.log(e);
-            }
-        }
-    };
+        };
 
 
 
         return stage;
 
     }
+
+    class canvasRender {
+        constructor(private stage: DisplayObjectContainer, private context2D: CanvasRenderingContext2D) {
+
+        }
+        render() {
+            let stage = this.stage;
+            let context2D = this.context2D;
+
+            this.renderContainer(stage);
+        }
+        renderContainer(container: DisplayObjectContainer) {
+            // let stage = this.stage;
+            // let context2D = this.context2D;
+
+            // for (let child of stage.children) {
+            //     if (child) {
+            //         this.renderBitmap(child as Bitmap);
+            //     }
+            //     else if (child) {
+
+            //     }
+            //     else if (child.type == "DisplayObjectContainer") {
+            //         this.renderCOntainer(child as DisplayObjectContainer);
+            //     }
+            // }
+        }
+
+        renderBitmap() {
+
+        }
+        renderTextField() {
+
+        }
+    }
 }
 
+namespace Factory {
+
+}
 
 // window.onload = () => {
 

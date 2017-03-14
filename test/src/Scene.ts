@@ -163,7 +163,7 @@ class UIScene {
         var stageH: number = 1136;
 
         var BlackMask = new engine.Shape();
-        BlackMask.graphics.beginFill(0x000000, 1);
+        BlackMask.graphics.beginFill("#000000", 1);
         BlackMask.graphics.drawRect(0, 0, stageW, stageH);
         BlackMask.graphics.endFill();
         BlackMask.graphics.width = stageW;
@@ -175,7 +175,7 @@ class UIScene {
         //  GameScene.getCurrentScene().main.addChild(battle);
 
         var WhiteMask = new engine.Shape();
-        WhiteMask.graphics.beginFill(0xFFFFFF, 1);
+        WhiteMask.graphics.beginFill("#FFFFFF", 1);
         WhiteMask.graphics.drawRect(0, 0, stageW, stageH);
         WhiteMask.graphics.endFill();
         WhiteMask.graphics.width = stageW;
@@ -208,7 +208,7 @@ class UIScene {
 
 
         var Title = new engine.TextField();
-       //Title.textColor = 0xffffff;
+       //Title.textColor = #ffffff;
      //Title.width = stageW - 172;
        // Title.textAlign = "center";
         Title.text = "二维位面之纯形争霸";
@@ -219,7 +219,7 @@ class UIScene {
         GameScene.getCurrentScene().stage.addChild(Title);
 
         var start = new engine.TextField();
-        // start.textColor = 0xffffff;
+        // start.textColor = #ffffff;
         // start.width = stageW - 172;
         // start.textAlign = "center";
         start.text = "开始游戏";
@@ -230,7 +230,7 @@ class UIScene {
         GameScene.getCurrentScene().stage.addChild(start);
 
         var material = new engine.TextField();
-        // material.textColor = 0xffffff;
+        // material.textColor = #ffffff;
         // material.width = stageW - 172;
         // material.textAlign = "center";
         material.text = "背景资料";
@@ -249,7 +249,7 @@ class UIScene {
 
 
         var about = new engine.TextField();
-        // about.textColor = 0xffffff;
+        // about.textColor = #ffffff;
         // about.width = stageW - 172;
         // about.textAlign = "center";
         about.text = "游戏理念";
@@ -259,14 +259,14 @@ class UIScene {
         about.y = 900;
         GameScene.getCurrentScene().stage.addChild(about);
         about.touchEnabled = true;
-        about.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+        about.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameabout();
         });
 
         start.touchEnabled = true;
-        start.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
-
+        start.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
+            console.log(11111);
             GameScene.getCurrentScene().stage.removeChild(start);
             GameScene.getCurrentScene().stage.removeChild(material);
             GameScene.getCurrentScene().stage.removeChild(about);
@@ -279,7 +279,7 @@ class UIScene {
 
     public showPick() {
         var pick = new engine.TextField();
-        // pick.textColor = 0xffffff;
+        // pick.textColor = #ffffff;
         // pick.width = 640 - 172;
         // pick.textAlign = "center";
         pick.text = "选择进入一名纯形战士视角";
@@ -290,7 +290,7 @@ class UIScene {
         GameScene.getCurrentScene().stage.addChild(pick);
 
         var sanjiao = new engine.TextField();
-        // sanjiao.textColor = 0xffffff;
+        // sanjiao.textColor = #ffffff;
         // sanjiao.width = 640 - 172;
         // sanjiao.textAlign = "center";
         sanjiao.text = "▲三角（善于迂回和远程输出）";
@@ -300,7 +300,7 @@ class UIScene {
         sanjiao.y = 600;
         GameScene.getCurrentScene().stage.addChild(sanjiao);
         sanjiao.touchEnabled = true;
-        sanjiao.addEventListener(engine.TouchEvent.TOUCH_BEGIN, () => {
+        sanjiao.addEventListener(engine.TouchEvent.TOUCH_BEGIN, (e:MouseEvent) => {
             this.ad = "sanjiao_png";
 
             switch (this.ad) {
@@ -327,7 +327,7 @@ class UIScene {
         });
 
         var fangkuai = new engine.TextField();
-        // fangkuai.textColor = 0xffffff;
+        // fangkuai.textColor = #ffffff;
         // fangkuai.width = 640 - 172;
         // fangkuai.textAlign = "center";
         fangkuai.text = "■方块（侵略性强并善于近战）";
@@ -337,7 +337,7 @@ class UIScene {
         fangkuai.y = 650;
         GameScene.getCurrentScene().stage.addChild(fangkuai);
         fangkuai.touchEnabled = true;
-        fangkuai.addEventListener(engine.TouchEvent.TOUCH_BEGIN, () => {
+        fangkuai.addEventListener(engine.TouchEvent.TOUCH_BEGIN, (e:MouseEvent) => {
             this.ad = "fangkuai_png";
 
             switch (this.ad) {
@@ -365,7 +365,7 @@ class UIScene {
         });
 
         var zhengyuan = new engine.TextField();
-        // zhengyuan.textColor = 0xffffff;
+        // zhengyuan.textColor = #ffffff;
         // zhengyuan.width = 640 - 172;
         // zhengyuan.textAlign = "center";
         zhengyuan.text = "●正圆（兼具灵活性和消耗战）";
@@ -375,7 +375,7 @@ class UIScene {
         zhengyuan.y = 700;
         GameScene.getCurrentScene().stage.addChild(zhengyuan);
         zhengyuan.touchEnabled = true;
-        zhengyuan.addEventListener(engine.TouchEvent.TOUCH_BEGIN, () => {
+        zhengyuan.addEventListener(engine.TouchEvent.TOUCH_BEGIN, (e:MouseEvent) => {
             this.ad = "zhengyuan_png";
 
             switch (this.ad) {
@@ -406,7 +406,7 @@ class UIScene {
 
         var rect = new engine.Shape();
         var textField = new engine.TextField();
-        rect.graphics.beginFill(0x000000, 1);
+        rect.graphics.beginFill("#000000", 1);
         rect.graphics.drawRect(0, 0, 640, 1136);
         rect.graphics.endFill();
         GameScene.getCurrentScene().stage.addChild(rect);
@@ -423,7 +423,7 @@ class UIScene {
         back.y = 900;
         back.x = 300;
         GameScene.getCurrentScene().stage.addChild(back);
-        back.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+        back.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameMenu();
         });
@@ -439,7 +439,7 @@ class UIScene {
         equipmentButtun.y = 1000;
         GameScene.getCurrentScene().stage.addChild(equipmentButtun);
         equipmentButtun.touchEnabled = true;
-        equipmentButtun.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+        equipmentButtun.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
             if (PropertyPanel.flag == 0) {
                 console.log(PropertyPanel.flag);
                 var pp: PropertyPanel = new PropertyPanel(UIScene.getCurrentScene().hero);
@@ -556,7 +556,7 @@ class UIScene {
         var stageH: number = 1136;
 
         var BlackMask = new engine.Shape();
-        BlackMask.graphics.beginFill(0x000000, 1);
+        BlackMask.graphics.beginFill("#000000", 1);
         BlackMask.graphics.drawRect(0, 0, stageW, stageH);
         BlackMask.graphics.endFill();
         BlackMask.graphics.width = stageW;
@@ -570,7 +570,7 @@ class UIScene {
         equipmentButtun.y = 1000;
         GameScene.getCurrentScene().stage.addChild(equipmentButtun);
         equipmentButtun.touchEnabled = true;
-        equipmentButtun.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+        equipmentButtun.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
             if (PropertyPanel.flag == 0) {
                 console.log(PropertyPanel.flag);
                 var pp: PropertyPanel = new PropertyPanel(UIScene.getCurrentScene().hero);
@@ -607,7 +607,7 @@ class UIScene {
         back.y = 900;
         back.x = 250;
         GameScene.getCurrentScene().stage.addChild(back);
-        back.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+        back.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameMenu();
         });
@@ -616,7 +616,7 @@ class UIScene {
     public gamehappyend() {
 
         var blackback = new engine.Shape();
-        blackback.graphics.beginFill(0x000000, 1);
+        blackback.graphics.beginFill("#000000", 1);
         blackback.graphics.drawRect(0, 0, 640, 1134);
         blackback.graphics.endFill();
         blackback.graphics.width = 640;
@@ -624,7 +624,7 @@ class UIScene {
         GameScene.getCurrentScene().stage.addChild(blackback);
 
         var win = new engine.TextField();
-        // win.textColor = 0xffffff;
+        // win.textColor = #ffffff;
         // win.width = 640 - 172;
         // win.textAlign = "center";
         win.text = "纯形战士战胜了不规则几何体，但战斗仍将继续！";
@@ -641,7 +641,7 @@ class UIScene {
         back.y = 900;
         back.x = 250;
         GameScene.getCurrentScene().stage.addChild(back);
-        back.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+        back.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameMenu();
         });
@@ -653,7 +653,7 @@ class UIScene {
         bcontinue.y = 800;
         bcontinue.x = 250;
         GameScene.getCurrentScene().stage.addChild(bcontinue);
-        bcontinue.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+        bcontinue.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
             GameScene.getCurrentScene().stage.removeAll();
             UIScene.getCurrentScene().gameContinue();
         });

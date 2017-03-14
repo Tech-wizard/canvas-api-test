@@ -43,11 +43,11 @@ class SkillConstructor extends engine.DisplayObjectContainer {
          this.addChild(tfname);
 
         bitmap.touchEnabled = true;
-        bitmap.addEventListener(engine.TouchEvent.TOUCH_TAP,()=>{
+        bitmap.addEventListener(engine.TouchEvent.TOUCH_TAP,(e:MouseEvent)=>{
         
         });
 
-        bitmap.addEventListener(engine.TouchEvent.TOUCH_BEGIN,()=>{
+        bitmap.addEventListener(engine.TouchEvent.TOUCH_BEGIN,(e:MouseEvent)=>{
 
         })
     }
