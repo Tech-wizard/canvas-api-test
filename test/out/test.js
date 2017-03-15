@@ -2069,12 +2069,12 @@ var UIScene = (function () {
         //   UIScene.getCurrentScene().hero = SetTriangle();
         //   var battle = new Battle(UIScene.getCurrentScene().hero,1,"npc_2_png",6,6);
         //  GameScene.getCurrentScene().main.addChild(battle);
-        var WhiteMask = new engine.Shape();
-        WhiteMask.graphics.beginFill("#FFFFFF", 1);
-        WhiteMask.graphics.drawRect(0, 0, stageW, stageH);
-        WhiteMask.graphics.endFill();
-        WhiteMask.graphics.width = stageW;
-        WhiteMask.graphics.height = stageH;
+        // var WhiteMask = new engine.Shape();
+        // WhiteMask.graphics.beginFill("#FFFFFF", 1);
+        // WhiteMask.graphics.drawRect(0, 0, stageW, stageH);
+        // WhiteMask.graphics.endFill();
+        // WhiteMask.graphics.width = stageW;
+        // WhiteMask.graphics.height = stageH;
         // //this.addChild(WhiteMask);
         // //WhiteMask.alpha = 0;
         var back = new engine.Bitmap();

@@ -350,10 +350,12 @@ namespace engine {
 
     export class Shape extends DisplayObjectContainer {
 
-        graphics: Graphics = new Graphics();
+        graphics: Graphics;
 
         constructor() {
             super();
+            this.graphics = new Graphics();
+            this.addChild(this.graphics);
         }
 
     }
@@ -369,10 +371,12 @@ namespace engine {
         transX;
         transY;
 
+
         render(context2D: CanvasRenderingContext2D) {
 
-            // context2D.globalAlpha = this.alpha;
-            context2D.fillStyle = this.fillColor;
+            //context2D.fillStyle = "#FFAAAA";     
+            context2D.fillStyle =  'rgba(0, 0, 0, '+this.alpha+')'; 
+            // 'rgba(192, 80, 77, 0.7)'; 
             context2D.fillRect(this.transX, this.transY, this.width, this.height);
             //context2D.fill();
         }
@@ -490,6 +494,7 @@ namespace engine {
     export type MovieClipFrameData = {
         "image": string
     }
+
 
 
 }

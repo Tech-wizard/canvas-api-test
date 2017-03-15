@@ -163,6 +163,7 @@ class UIScene {
         var stageH: number = 1136;
 
         var BlackMask = new engine.Shape();
+        
         BlackMask.graphics.beginFill("#000000", 1);
         BlackMask.graphics.drawRect(0, 0, stageW, stageH);
         BlackMask.graphics.endFill();
@@ -174,12 +175,12 @@ class UIScene {
         //   var battle = new Battle(UIScene.getCurrentScene().hero,1,"npc_2_png",6,6);
         //  GameScene.getCurrentScene().main.addChild(battle);
 
-        var WhiteMask = new engine.Shape();
-        WhiteMask.graphics.beginFill("#FFFFFF", 1);
-        WhiteMask.graphics.drawRect(0, 0, stageW, stageH);
-        WhiteMask.graphics.endFill();
-        WhiteMask.graphics.width = stageW;
-        WhiteMask.graphics.height = stageH;
+        // var WhiteMask = new engine.Shape();
+        // WhiteMask.graphics.beginFill("#FFFFFF", 1);
+        // WhiteMask.graphics.drawRect(0, 0, stageW, stageH);
+        // WhiteMask.graphics.endFill();
+        // WhiteMask.graphics.width = stageW;
+        // WhiteMask.graphics.height = stageH;
         // //this.addChild(WhiteMask);
         // //WhiteMask.alpha = 0;
 
