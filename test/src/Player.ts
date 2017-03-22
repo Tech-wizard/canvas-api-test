@@ -68,10 +68,6 @@ class Player extends engine.DisplayObjectContainer {
 
 
         });
-        //engine.Tween.get(walk).to({ x: targetX, y: targetY }, 300, engine.Ease.sineIn);
-        // var tw = engine.Tween.get(walk);
-        // tw.wait(200);
-        // tw.call(change, self);
 
 
     }

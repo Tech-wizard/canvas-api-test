@@ -223,12 +223,24 @@ class UIScene {
         // start.textColor = #ffffff;
         // start.width = stageW - 172;
         // start.textAlign = "center";
-        start.text = "开始游戏";
+        start.text = "开始游戏2";
         start.size = '40';
         start.font = '黑体';
         start.x = 90;
         start.y = 800;
         GameScene.getCurrentScene().stage.addChild(start);
+
+        start.touchEnabled = true;
+        start.addEventListener(engine.TouchEvent.TOUCH_TAP, () => {
+            console.log(start);
+            GameScene.getCurrentScene().stage.removeChild(start);
+            GameScene.getCurrentScene().stage.removeChild(material);
+            GameScene.getCurrentScene().stage.removeChild(about);
+            GameScene.getCurrentScene().stage.removeChild(Title);
+            GameScene.getCurrentScene().stage.removeChild(back);
+            UIScene.getCurrentScene().showPick();
+
+        });
 
         var material = new engine.TextField();
         // material.textColor = #ffffff;
@@ -265,17 +277,7 @@ class UIScene {
             UIScene.getCurrentScene().gameabout();
         });
 
-        start.touchEnabled = true;
-        start.addEventListener(engine.TouchEvent.TOUCH_TAP, (e:MouseEvent) => {
-            console.log(11111);
-            GameScene.getCurrentScene().stage.removeChild(start);
-            GameScene.getCurrentScene().stage.removeChild(material);
-            GameScene.getCurrentScene().stage.removeChild(about);
-            GameScene.getCurrentScene().stage.removeChild(Title);
-            GameScene.getCurrentScene().stage.removeChild(back);
-            UIScene.getCurrentScene().showPick();
-
-        });
+       
     }
 
     public showPick() {
