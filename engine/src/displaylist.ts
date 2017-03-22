@@ -129,7 +129,7 @@ namespace engine {
             else {
                 this.globalAlpha = this.alpha;
             }
-            
+
         }
 
   
@@ -316,9 +316,9 @@ namespace engine {
     export class Shape extends DisplayObjectContainer {
 
         graphics: Graphics;
-
         constructor() {
             super();
+            this.type = "Shape";
             this.graphics = new Graphics();
             this.addChild(this.graphics);
         }

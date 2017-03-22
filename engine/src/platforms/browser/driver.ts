@@ -170,6 +170,9 @@ namespace engine {
                 else if (child.type == "TextField") {
                     this.renderTextField(child as TextField);
                 }
+                else if (child.type == "Shape") {
+                    this.renderShape(child as Shape);
+                }
                 else if (child.type == "DisplayObjectContainer") {
                     this.renderContainer(child as DisplayObjectContainer);
                 }
